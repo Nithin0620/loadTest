@@ -1,7 +1,7 @@
-import { k6EventBus } from '../../../../lib/k6/eventBus.js';
-import { connectToDatabase } from '../../../../lib/db/mongoose.js';
-import TestRun from '../../../../models/TestRun.js';
-import { isTestRunning } from '../../../../lib/k6/runner.js';
+import { k6EventBus } from '../../../../../lib/k6/eventBus.js';
+import { connectToDatabase } from '../../../../../lib/db/mongoose.js';
+import TestRun from '../../../../../models/TestRun.js';
+import { isTestRunning } from '../../../../../lib/k6/runner.js';
 
 export const dynamic = 'force-dynamic';
 

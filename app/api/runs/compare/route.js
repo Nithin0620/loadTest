@@ -77,7 +77,7 @@ function calculateRunDiff(runA, runB) {
       candidate: p95B,
       delta: p95Diff,
       percentDelta: p95Pct,
-      improved: p95Diff < 0, // Lower latency is better
+      improved: p95Diff < 0,
     },
     avgLatency: {
       baseline: avgLatA,

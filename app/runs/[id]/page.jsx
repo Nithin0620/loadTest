@@ -4,17 +4,17 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Activity, ArrowRight, ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
-import MetricGauge from '../../../components/live/MetricGauge';
-import LiveLineChart from '../../../components/live/LiveLineChart';
-import StatusCodeBar from '../../../components/live/StatusCodeBar';
-import ProgressBar from '../../../components/live/ProgressBar';
+import MetricGauge from '@/components/live/MetricGauge';
+import LiveLineChart from '@/components/live/LiveLineChart';
+import StatusCodeBar from '@/components/live/StatusCodeBar';
+import ProgressBar from '@/components/live/ProgressBar';
 
 export default function LiveTestPage() {
   const params = useParams();
   const router = useRouter();
   const runId = params.id;
 
-  const [status, setStatus] = useState('connecting'); // 'connecting' | 'running' | 'completed' | 'failed' | 'cancelled'
+  const [status, setStatus] = useState('connecting');
   const [config, setConfig] = useState(null);
   const [cancelling, setCancelling] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');

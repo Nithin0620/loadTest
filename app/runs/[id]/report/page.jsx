@@ -10,15 +10,12 @@ import {
   Share2,
   Check,
   ArrowLeft,
-  FileJson,
-  Activity,
-  Layers,
 } from 'lucide-react';
-import Scorecard from '../../../../components/report/Scorecard';
-import PercentileChart from '../../../../components/report/PercentileChart';
-import CapacityAssessmentCard from '../../../../components/report/CapacityAssessmentCard';
-import LiveLineChart from '../../../../components/live/LiveLineChart';
-import StatusCodeBar from '../../../../components/live/StatusCodeBar';
+import Scorecard from '@/components/report/Scorecard';
+import PercentileChart from '@/components/report/PercentileChart';
+import CapacityAssessmentCard from '@/components/report/CapacityAssessmentCard';
+import LiveLineChart from '@/components/live/LiveLineChart';
+import StatusCodeBar from '@/components/live/StatusCodeBar';
 
 export default function ReportPage() {
   const params = useParams();

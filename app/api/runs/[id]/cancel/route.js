@@ -1,4 +1,4 @@
-import { cancelK6Test } from '../../../../lib/k6/runner.js';
+import { cancelK6Test } from '../../../../../lib/k6/runner.js';
 
 export const dynamic = 'force-dynamic';
 

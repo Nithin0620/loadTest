@@ -67,7 +67,7 @@ export async function POST(request) {
       status: 'pending',
     });
 
-    // Start k6 runner in background (fire-and-forget promise, handles own DB updates and eventBus)
+    // Start k6 runner in background
     runK6Test(runDoc._id, snapshotConfig).catch((err) => {
       console.error('[API /api/runs] Background run error:', err);
     });
