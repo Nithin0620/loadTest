@@ -149,7 +149,7 @@ export default function LiveTestPage() {
   return (
     <div className="space-y-6 py-4">
       {/* Top Header Card */}
-      <div className="bg-dark-900 border border-dark-800 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-dark-900 border border-dark-700 rounded-2xl p-6 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-3">
             <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-yellow-400 text-black">
@@ -175,7 +175,7 @@ export default function LiveTestPage() {
             </div>
           )}
           {status === 'connecting' && (
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-dark-800 border border-dark-700 text-zinc-300 text-xs font-mono">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-dark-850 border border-dark-700 text-zinc-300 text-xs font-mono">
               <RefreshCw className="w-3.5 h-3.5 animate-spin text-yellow-400" />
               Connecting Engine...
             </div>
@@ -183,10 +183,10 @@ export default function LiveTestPage() {
           {status === 'completed' && (
             <Link
               href={`/runs/${runId}/report`}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 text-black text-xs font-mono font-bold shadow-glow-green hover:bg-emerald-400 transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-400 text-black text-xs font-mono font-bold shadow-glow-sm hover:bg-yellow-300 transition-all"
             >
               <ShieldCheck className="w-4 h-4" />
-              Test Finished — View Full Report
+              Test Finished — View Report
               <ArrowRight className="w-4 h-4" />
             </Link>
           )}
@@ -205,7 +205,7 @@ export default function LiveTestPage() {
       </div>
 
       {errorMsg && (
-        <div className="p-4 bg-red-950/50 border border-red-800 rounded-2xl flex items-center gap-3 text-xs font-mono text-red-300">
+        <div className="p-4 bg-red-950/60 border border-red-800 rounded-2xl flex items-center gap-3 text-xs font-mono text-red-300">
           <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
           <span>{errorMsg}</span>
         </div>

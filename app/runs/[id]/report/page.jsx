@@ -10,6 +10,7 @@ import {
   Share2,
   Check,
   ArrowLeft,
+  AlertCircle,
 } from 'lucide-react';
 import Scorecard from '@/components/report/Scorecard';
 import PercentileChart from '@/components/report/PercentileChart';
@@ -80,7 +81,7 @@ export default function ReportPage() {
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(run, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `loadcheck-report-${runId}.json`);
+    downloadAnchor.setAttribute('download', `benchley-report-${runId}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
@@ -111,7 +112,7 @@ export default function ReportPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="p-2 rounded-lg bg-dark-900 border border-dark-800 text-zinc-400 hover:text-white hover:bg-dark-800 transition-colors"
+            className="p-2 rounded-lg bg-dark-900 border border-dark-700 text-zinc-400 hover:text-white hover:bg-dark-800 transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
@@ -135,7 +136,7 @@ export default function ReportPage() {
           <button
             onClick={handleReRun}
             disabled={reRunning}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-dark-900 border border-dark-700 hover:border-yellow-400/60 text-xs font-mono text-yellow-400 hover:bg-dark-800 transition-all shadow-glow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-yellow-400 text-black font-bold text-xs font-mono hover:bg-yellow-300 transition-all shadow-glow-sm cursor-pointer"
           >
             <RotateCcw className={`w-3.5 h-3.5 ${reRunning ? 'animate-spin' : ''}`} />
             Re-run Test
@@ -143,15 +144,15 @@ export default function ReportPage() {
 
           <Link
             href={`/compare?run1=${runId}`}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-dark-900 border border-dark-700 hover:border-zinc-500 text-xs font-mono text-zinc-300 hover:bg-dark-800 transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-dark-900 border border-dark-700 hover:border-yellow-400/50 text-xs font-mono text-zinc-300 hover:bg-dark-800 transition-all"
           >
-            <GitCompare className="w-3.5 h-3.5 text-zinc-400" />
+            <GitCompare className="w-3.5 h-3.5 text-yellow-400" />
             Compare Run
           </Link>
 
           <button
             onClick={handleExportJson}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-dark-900 border border-dark-700 hover:border-zinc-500 text-xs font-mono text-zinc-300 hover:bg-dark-800 transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-dark-900 border border-dark-700 hover:border-zinc-500 text-xs font-mono text-zinc-300 hover:bg-dark-800 transition-all cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" />
             JSON
@@ -159,7 +160,7 @@ export default function ReportPage() {
 
           <button
             onClick={handleCopyLink}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-dark-900 border border-dark-700 hover:border-zinc-500 text-xs font-mono text-zinc-300 hover:bg-dark-800 transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-dark-900 border border-dark-700 hover:border-zinc-500 text-xs font-mono text-zinc-300 hover:bg-dark-800 transition-all cursor-pointer"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
             {copied ? 'Copied' : 'Share'}
@@ -170,10 +171,11 @@ export default function ReportPage() {
       {run.status === 'failed' && (
         <div className="p-4 bg-red-950/70 border border-red-800 rounded-2xl flex flex-col gap-2 text-xs font-mono text-red-300">
           <div className="flex items-center gap-2 font-bold text-red-400">
+            <AlertCircle className="w-4 h-4" />
             <span>Execution Failed</span>
           </div>
           {run.errorMessage && (
-            <pre className="p-2.5 bg-black/40 border border-red-900/60 rounded-lg text-[11px] text-red-300 whitespace-pre-wrap font-mono overflow-x-auto">
+            <pre className="p-2.5 bg-black/50 border border-red-900/60 rounded-lg text-[11px] text-red-300 whitespace-pre-wrap font-mono overflow-x-auto">
               {run.errorMessage}
             </pre>
           )}

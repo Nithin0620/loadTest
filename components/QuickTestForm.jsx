@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Rocket, Sliders, Terminal, Plus, Trash2, ArrowRight } from 'lucide-react';
+import { Zap, Sliders, Terminal, Plus, Trash2, ArrowRight } from 'lucide-react';
 import AdvancedConfigTabs from './AdvancedConfigTabs';
 import CurlImportModal from './CurlImportModal';
 
@@ -113,11 +113,11 @@ export default function QuickTestForm() {
   };
 
   return (
-    <div className="w-full bg-dark-900 border border-dark-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
+    <div className="w-full bg-dark-900 border border-dark-700 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
       {/* Top Banner & Presets */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-dark-800">
         <div>
-          <h2 className="text-xl font-bold text-white font-mono flex items-center gap-2">
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
             Configure Load Test
           </h2>
           <p className="text-xs text-zinc-400 mt-1">
@@ -129,7 +129,7 @@ export default function QuickTestForm() {
           <button
             type="button"
             onClick={() => setCurlModalOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-dark-800 border border-dark-700 text-yellow-400 hover:border-yellow-400/50 hover:bg-dark-700 text-xs font-mono font-medium transition-all"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-dark-850 border border-dark-700 text-yellow-400 hover:border-yellow-400/50 hover:bg-dark-800 text-xs font-mono font-medium transition-all"
           >
             <Terminal className="w-3.5 h-3.5" />
             Import cURL
@@ -140,7 +140,7 @@ export default function QuickTestForm() {
       <form onSubmit={handleLaunch} className="space-y-6">
         {/* Main URL Bar */}
         <div className="space-y-2">
-          <label className="text-xs font-mono font-medium text-zinc-300">
+          <label className="text-xs font-medium text-zinc-300">
             Target Endpoint URL
           </label>
           <div className="flex flex-col sm:flex-row gap-2">
@@ -148,7 +148,7 @@ export default function QuickTestForm() {
             <select
               value={httpMethod}
               onChange={(e) => setHttpMethod(e.target.value)}
-              className="bg-dark-950 border border-dark-700 rounded-lg px-3 py-2.5 text-xs font-mono font-bold text-yellow-400 focus:outline-none focus:border-yellow-400/80 cursor-pointer sm:w-32"
+              className="bg-black border border-dark-700 rounded-lg px-3 py-2.5 text-xs font-mono font-bold text-yellow-400 focus:outline-none focus:border-yellow-400 cursor-pointer sm:w-32"
             >
               {HTTP_METHODS.map((m) => (
                 <option key={m} value={m}>
@@ -164,14 +164,14 @@ export default function QuickTestForm() {
               placeholder="https://api.domain.com/v1/resource"
               value={targetUrl}
               onChange={(e) => setTargetUrl(e.target.value)}
-              className="flex-1 bg-dark-950 border border-dark-700 rounded-lg px-4 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400/80 focus:ring-1 focus:ring-yellow-400/50 transition-all"
+              className="flex-1 bg-black border border-dark-700 rounded-lg px-4 py-2.5 text-sm font-mono text-white placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400/30 transition-all"
             />
           </div>
         </div>
 
         {/* Load Profile Selector */}
         <div className="space-y-3">
-          <label className="text-xs font-mono font-medium text-zinc-300">
+          <label className="text-xs font-medium text-zinc-300">
             Workload Distribution Mode
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -187,10 +187,10 @@ export default function QuickTestForm() {
                 className={`flex flex-col text-left p-3.5 rounded-xl border transition-all ${
                   loadType === mode.id
                     ? 'bg-yellow-400/10 border-yellow-400 text-white shadow-glow-sm'
-                    : 'bg-dark-950 border-dark-800 text-zinc-400 hover:border-dark-700 hover:text-zinc-300'
+                    : 'bg-black border-dark-800 text-zinc-400 hover:border-dark-700 hover:text-zinc-300'
                 }`}
               >
-                <span className="text-xs font-mono font-bold text-yellow-400">{mode.title}</span>
+                <span className="text-xs font-bold text-yellow-400">{mode.title}</span>
                 <span className="text-[11px] text-zinc-500 mt-1">{mode.desc}</span>
               </button>
             ))}
@@ -199,7 +199,7 @@ export default function QuickTestForm() {
 
         {/* Mode Specific Parameters */}
         {loadType === 'constant_vus' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-dark-950 border border-dark-800 rounded-xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-black border border-dark-800 rounded-xl">
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-mono">
                 <span className="text-zinc-400">Virtual Users (VUs)</span>
@@ -221,7 +221,7 @@ export default function QuickTestForm() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono text-zinc-400">Test Duration</label>
+              <label className="text-xs text-zinc-400">Test Duration</label>
               <div className="flex gap-2">
                 {['10s', '30s', '60s', '120s'].map((d) => (
                   <button
@@ -231,7 +231,7 @@ export default function QuickTestForm() {
                     className={`flex-1 py-2 rounded-lg text-xs font-mono font-medium transition-all ${
                       duration === d
                         ? 'bg-yellow-400 text-black font-bold shadow-glow-sm'
-                        : 'bg-dark-850 text-zinc-400 hover:text-zinc-200 border border-dark-700'
+                        : 'bg-dark-850 text-zinc-400 hover:text-white border border-dark-700'
                     }`}
                   >
                     {d}
@@ -243,13 +243,13 @@ export default function QuickTestForm() {
         )}
 
         {loadType === 'ramping_vus' && (
-          <div className="p-4 bg-dark-950 border border-dark-800 rounded-xl space-y-3">
+          <div className="p-4 bg-black border border-dark-800 rounded-xl space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-medium text-zinc-300">Ramping Stages Timeline</span>
+              <span className="text-xs font-medium text-zinc-300">Ramping Stages Timeline</span>
               <button
                 type="button"
                 onClick={addStage}
-                className="flex items-center gap-1 text-xs text-yellow-400 hover:text-yellow-300 font-mono font-medium"
+                className="flex items-center gap-1 text-xs text-yellow-400 hover:text-yellow-300 font-medium"
               >
                 <Plus className="w-3.5 h-3.5" /> Add Stage
               </button>
@@ -265,7 +265,7 @@ export default function QuickTestForm() {
                       type="number"
                       value={stage.target}
                       onChange={(e) => updateStage(idx, 'target', e.target.value)}
-                      className="w-24 bg-dark-900 border border-dark-700 rounded px-2 py-1 text-xs font-mono text-yellow-300"
+                      className="w-24 bg-dark-900 border border-dark-700 rounded px-2 py-1 text-xs font-mono text-yellow-400"
                     />
                   </div>
                   <div className="flex items-center gap-1 flex-1">
@@ -275,14 +275,14 @@ export default function QuickTestForm() {
                       value={stage.duration}
                       onChange={(e) => updateStage(idx, 'duration', e.target.value)}
                       placeholder="10s"
-                      className="w-20 bg-dark-900 border border-dark-700 rounded px-2 py-1 text-xs font-mono text-zinc-200"
+                      className="w-20 bg-dark-900 border border-dark-700 rounded px-2 py-1 text-xs font-mono text-white"
                     />
                   </div>
                   {stages.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeStage(idx)}
-                      className="text-zinc-500 hover:text-red-400 p-1"
+                      className="text-zinc-500 hover:text-zinc-300 p-1"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -294,7 +294,7 @@ export default function QuickTestForm() {
         )}
 
         {loadType === 'constant_rps' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-dark-950 border border-dark-800 rounded-xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-black border border-dark-800 rounded-xl">
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-mono">
                 <span className="text-zinc-400">Target Throughput (RPS)</span>
@@ -317,7 +317,7 @@ export default function QuickTestForm() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono text-zinc-400">Test Duration</label>
+              <label className="text-xs text-zinc-400">Test Duration</label>
               <div className="flex gap-2">
                 {['10s', '30s', '60s'].map((d) => (
                   <button
@@ -327,7 +327,7 @@ export default function QuickTestForm() {
                     className={`flex-1 py-2 rounded-lg text-xs font-mono font-medium transition-all ${
                       duration === d
                         ? 'bg-yellow-400 text-black font-bold shadow-glow-sm'
-                        : 'bg-dark-850 text-zinc-400 hover:text-zinc-200 border border-dark-700'
+                        : 'bg-dark-850 text-zinc-400 hover:text-white border border-dark-700'
                     }`}
                   >
                     {d}
@@ -343,7 +343,7 @@ export default function QuickTestForm() {
           <button
             type="button"
             onClick={() => setShowAdvanced(!showAdvanced)}
-            className="flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-yellow-400 transition-colors"
+            className="flex items-center gap-2 text-xs text-zinc-400 hover:text-yellow-400 transition-colors font-medium"
           >
             <Sliders className="w-3.5 h-3.5" />
             {showAdvanced ? 'Hide Advanced Options (Headers, Auth, Body, SLOs)' : 'Show Advanced Options (Headers, Auth, Body, SLOs)'}
@@ -366,7 +366,7 @@ export default function QuickTestForm() {
         )}
 
         {error && (
-          <div className="p-3.5 bg-red-950/50 border border-red-800 rounded-xl text-xs text-red-300 font-mono">
+          <div className="p-3.5 bg-dark-850 border border-yellow-400/50 rounded-xl text-xs text-yellow-300 font-mono">
             {error}
           </div>
         )}
@@ -376,17 +376,17 @@ export default function QuickTestForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 px-6 rounded-xl bg-yellow-400 text-black font-mono font-extrabold text-sm tracking-wider uppercase flex items-center justify-center gap-3 hover:bg-yellow-300 active:scale-[0.99] transition-all shadow-glow hover:shadow-glow-lg disabled:opacity-50"
+            className="w-full py-3.5 px-6 rounded-xl bg-yellow-400 text-black font-bold text-sm tracking-wide uppercase flex items-center justify-center gap-3 hover:bg-yellow-300 active:scale-[0.99] transition-all shadow-glow hover:shadow-glow-lg disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>
                 <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                Initializing k6 Engine...
+                Executing k6 Runner...
               </>
             ) : (
               <>
-                <Rocket className="w-5 h-5 fill-current" />
-                Run Load Test
+                <Zap className="w-4 h-4 fill-current" />
+                Run Benchmark
                 <ArrowRight className="w-4 h-4" />
               </>
             )}

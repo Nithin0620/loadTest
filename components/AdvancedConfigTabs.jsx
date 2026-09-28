@@ -60,16 +60,16 @@ export default function AdvancedConfigTabs({
   };
 
   return (
-    <div className="border border-dark-700 bg-dark-900 rounded-xl overflow-hidden">
+    <div className="border border-dark-700 bg-black rounded-xl overflow-hidden">
       {/* Tabs Header */}
-      <div className="flex border-b border-dark-800 bg-dark-850 px-2 overflow-x-auto">
+      <div className="flex border-b border-dark-800 bg-dark-900 px-2 overflow-x-auto">
         <button
           type="button"
           onClick={() => setActiveTab('headers')}
-          className={`flex items-center gap-2 px-4 py-3 text-xs font-mono font-medium border-b-2 transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-3 text-xs font-medium border-b-2 transition-all whitespace-nowrap cursor-pointer ${
             activeTab === 'headers'
-              ? 'border-yellow-400 text-yellow-400 bg-dark-900/60'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
+              ? 'border-yellow-400 text-yellow-400 bg-dark-850'
+              : 'border-transparent text-zinc-400 hover:text-white'
           }`}
         >
           <Key className="w-3.5 h-3.5" />
@@ -79,10 +79,10 @@ export default function AdvancedConfigTabs({
         <button
           type="button"
           onClick={() => setActiveTab('auth')}
-          className={`flex items-center gap-2 px-4 py-3 text-xs font-mono font-medium border-b-2 transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-3 text-xs font-medium border-b-2 transition-all whitespace-nowrap cursor-pointer ${
             activeTab === 'auth'
-              ? 'border-yellow-400 text-yellow-400 bg-dark-900/60'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
+              ? 'border-yellow-400 text-yellow-400 bg-dark-850'
+              : 'border-transparent text-zinc-400 hover:text-white'
           }`}
         >
           <Shield className="w-3.5 h-3.5" />
@@ -92,10 +92,10 @@ export default function AdvancedConfigTabs({
         <button
           type="button"
           onClick={() => setActiveTab('body')}
-          className={`flex items-center gap-2 px-4 py-3 text-xs font-mono font-medium border-b-2 transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-3 text-xs font-medium border-b-2 transition-all whitespace-nowrap cursor-pointer ${
             activeTab === 'body'
-              ? 'border-yellow-400 text-yellow-400 bg-dark-900/60'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
+              ? 'border-yellow-400 text-yellow-400 bg-dark-850'
+              : 'border-transparent text-zinc-400 hover:text-white'
           }`}
         >
           <FileCode className="w-3.5 h-3.5" />
@@ -105,10 +105,10 @@ export default function AdvancedConfigTabs({
         <button
           type="button"
           onClick={() => setActiveTab('thresholds')}
-          className={`flex items-center gap-2 px-4 py-3 text-xs font-mono font-medium border-b-2 transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-3 text-xs font-medium border-b-2 transition-all whitespace-nowrap cursor-pointer ${
             activeTab === 'thresholds'
-              ? 'border-yellow-400 text-yellow-400 bg-dark-900/60'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
+              ? 'border-yellow-400 text-yellow-400 bg-dark-850'
+              : 'border-transparent text-zinc-400 hover:text-white'
           }`}
         >
           <CheckSquare className="w-3.5 h-3.5" />
@@ -117,7 +117,7 @@ export default function AdvancedConfigTabs({
       </div>
 
       {/* Tab Contents */}
-      <div className="p-4">
+      <div className="p-4 bg-black">
         {/* HEADERS TAB */}
         {activeTab === 'headers' && (
           <div className="space-y-3">
@@ -126,7 +126,7 @@ export default function AdvancedConfigTabs({
               <button
                 type="button"
                 onClick={addHeader}
-                className="flex items-center gap-1 text-yellow-400 hover:text-yellow-300 font-mono font-medium text-xs"
+                className="flex items-center gap-1 text-yellow-400 hover:text-yellow-300 font-medium text-xs cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" /> Add Header
               </button>
@@ -149,19 +149,19 @@ export default function AdvancedConfigTabs({
                       placeholder="Header Name (e.g. Content-Type)"
                       value={h.key}
                       onChange={(e) => updateHeader(idx, 'key', e.target.value)}
-                      className="flex-1 bg-dark-950 border border-dark-700 rounded-md px-3 py-1.5 text-xs font-mono text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400/80"
+                      className="flex-1 bg-dark-900 border border-dark-700 rounded-md px-3 py-1.5 text-xs font-mono text-white placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400"
                     />
                     <input
                       type="text"
                       placeholder="Value (e.g. application/json)"
                       value={h.value}
                       onChange={(e) => updateHeader(idx, 'value', e.target.value)}
-                      className="flex-1 bg-dark-950 border border-dark-700 rounded-md px-3 py-1.5 text-xs font-mono text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400/80"
+                      className="flex-1 bg-dark-900 border border-dark-700 rounded-md px-3 py-1.5 text-xs font-mono text-white placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400"
                     />
                     <button
                       type="button"
                       onClick={() => removeHeader(idx)}
-                      className="p-1.5 text-zinc-500 hover:text-red-400 rounded-md transition-colors"
+                      className="p-1.5 text-zinc-500 hover:text-zinc-300 rounded-md transition-colors cursor-pointer"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -177,7 +177,7 @@ export default function AdvancedConfigTabs({
           <div className="space-y-4">
             <div className="flex gap-4">
               {['none', 'bearer', 'basic'].map((type) => (
-                <label key={type} className="flex items-center gap-2 text-xs font-mono cursor-pointer">
+                <label key={type} className="flex items-center gap-2 text-xs cursor-pointer">
                   <input
                     type="radio"
                     name="authType"
@@ -186,20 +186,20 @@ export default function AdvancedConfigTabs({
                     onChange={() => setAuth({ ...auth, authType: type })}
                     className="accent-yellow-400"
                   />
-                  <span className="capitalize">{type === 'none' ? 'No Auth' : `${type} Token`}</span>
+                  <span className="capitalize text-zinc-300">{type === 'none' ? 'No Auth' : `${type} Token`}</span>
                 </label>
               ))}
             </div>
 
             {auth.authType === 'bearer' && (
               <div className="space-y-1.5">
-                <label className="text-xs text-zinc-400 font-mono">Bearer Token</label>
+                <label className="text-xs text-zinc-400">Bearer Token</label>
                 <input
                   type="text"
                   placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                   value={auth.token}
                   onChange={(e) => setAuth({ ...auth, token: e.target.value })}
-                  className="w-full bg-dark-950 border border-dark-700 rounded-md px-3 py-2 text-xs font-mono text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400/80"
+                  className="w-full bg-dark-900 border border-dark-700 rounded-md px-3 py-2 text-xs font-mono text-white placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400"
                 />
               </div>
             )}
@@ -207,23 +207,23 @@ export default function AdvancedConfigTabs({
             {auth.authType === 'basic' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs text-zinc-400 font-mono">Username</label>
+                  <label className="text-xs text-zinc-400">Username</label>
                   <input
                     type="text"
                     placeholder="admin"
                     value={auth.username}
                     onChange={(e) => setAuth({ ...auth, username: e.target.value })}
-                    className="w-full bg-dark-950 border border-dark-700 rounded-md px-3 py-2 text-xs font-mono text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400/80"
+                    className="w-full bg-dark-900 border border-dark-700 rounded-md px-3 py-2 text-xs font-mono text-white placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs text-zinc-400 font-mono">Password</label>
+                  <label className="text-xs text-zinc-400">Password</label>
                   <input
                     type="password"
                     placeholder="••••••••"
                     value={auth.password}
                     onChange={(e) => setAuth({ ...auth, password: e.target.value })}
-                    className="w-full bg-dark-950 border border-dark-700 rounded-md px-3 py-2 text-xs font-mono text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400/80"
+                    className="w-full bg-dark-900 border border-dark-700 rounded-md px-3 py-2 text-xs font-mono text-white placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400"
                   />
                 </div>
               </div>
@@ -237,7 +237,7 @@ export default function AdvancedConfigTabs({
             <div className="flex items-center justify-between">
               <div className="flex gap-4">
                 {['none', 'json', 'raw'].map((type) => (
-                  <label key={type} className="flex items-center gap-2 text-xs font-mono cursor-pointer">
+                  <label key={type} className="flex items-center gap-2 text-xs cursor-pointer">
                     <input
                       type="radio"
                       name="bodyType"
@@ -246,7 +246,7 @@ export default function AdvancedConfigTabs({
                       onChange={() => setBodyType(type)}
                       className="accent-yellow-400"
                     />
-                    <span className="uppercase">{type}</span>
+                    <span className="uppercase text-zinc-300">{type}</span>
                   </label>
                 ))}
               </div>
@@ -255,7 +255,7 @@ export default function AdvancedConfigTabs({
                 <button
                   type="button"
                   onClick={formatJson}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded bg-dark-800 text-yellow-400 hover:bg-dark-700 text-xs font-mono transition-colors"
+                  className="flex items-center gap-1 px-2.5 py-1 rounded bg-dark-850 text-yellow-400 hover:bg-dark-800 text-xs transition-colors cursor-pointer"
                 >
                   <Sparkles className="w-3 h-3" /> Prettify JSON
                 </button>
@@ -268,7 +268,7 @@ export default function AdvancedConfigTabs({
                 value={bodyContent}
                 onChange={(e) => setBodyContent(e.target.value)}
                 placeholder={bodyType === 'json' ? '{\n  "query": "laptop",\n  "page": 1\n}' : 'raw payload'}
-                className="w-full bg-dark-950 border border-dark-700 rounded-md p-3 text-xs font-mono text-yellow-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400/80 resize-none"
+                className="w-full bg-dark-900 border border-dark-700 rounded-md p-3 text-xs font-mono text-white placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 resize-none"
               />
             )}
           </div>
@@ -282,7 +282,7 @@ export default function AdvancedConfigTabs({
               <button
                 type="button"
                 onClick={addThreshold}
-                className="flex items-center gap-1 text-yellow-400 hover:text-yellow-300 font-mono font-medium text-xs"
+                className="flex items-center gap-1 text-yellow-400 hover:text-yellow-300 font-medium text-xs cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" /> Add Threshold
               </button>
@@ -297,7 +297,7 @@ export default function AdvancedConfigTabs({
                     <select
                       value={t.metric}
                       onChange={(e) => updateThreshold(idx, 'metric', e.target.value)}
-                      className="bg-dark-950 border border-dark-700 rounded-md px-2 py-1.5 text-xs font-mono text-zinc-200"
+                      className="bg-dark-900 border border-dark-700 rounded-md px-2 py-1.5 text-xs font-mono text-white"
                     >
                       <option value="http_req_duration">Latency (http_req_duration)</option>
                       <option value="http_req_failed">Error Rate (http_req_failed)</option>
@@ -306,7 +306,7 @@ export default function AdvancedConfigTabs({
                     <select
                       value={t.operator}
                       onChange={(e) => updateThreshold(idx, 'operator', e.target.value)}
-                      className="bg-dark-950 border border-dark-700 rounded-md px-2 py-1.5 text-xs font-mono text-zinc-200"
+                      className="bg-dark-900 border border-dark-700 rounded-md px-2 py-1.5 text-xs font-mono text-white"
                     >
                       <option value="p(95)<">p95 &lt;</option>
                       <option value="p(99)<">p99 &lt;</option>
@@ -320,7 +320,7 @@ export default function AdvancedConfigTabs({
                       placeholder="Value (ms or %)"
                       value={t.value}
                       onChange={(e) => updateThreshold(idx, 'value', Number(e.target.value))}
-                      className="w-28 bg-dark-950 border border-dark-700 rounded-md px-3 py-1.5 text-xs font-mono text-zinc-200 focus:outline-none focus:border-yellow-400/80"
+                      className="w-28 bg-dark-900 border border-dark-700 rounded-md px-3 py-1.5 text-xs font-mono text-white focus:outline-none focus:border-yellow-400"
                     />
 
                     <span className="text-xs text-zinc-500 font-mono">ms / %</span>
@@ -328,7 +328,7 @@ export default function AdvancedConfigTabs({
                     <button
                       type="button"
                       onClick={() => removeThreshold(idx)}
-                      className="p-1.5 text-zinc-500 hover:text-red-400 rounded-md transition-colors ml-auto"
+                      className="p-1.5 text-zinc-500 hover:text-zinc-300 rounded-md transition-colors ml-auto cursor-pointer"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

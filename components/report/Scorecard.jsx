@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Activity, CheckCircle, XCircle, Zap, Clock, ShieldCheck, Database } from 'lucide-react';
+import { Activity, CheckCircle, XCircle, Zap, Clock } from 'lucide-react';
 
 export default function Scorecard({ summary = {}, duration = 0 }) {
   const total = summary.totalRequests || 0;
@@ -23,15 +23,15 @@ export default function Scorecard({ summary = {}, duration = 0 }) {
       accent: 'border-dark-700',
     },
     {
-      label: 'Average RPS',
+      label: 'Average Throughput',
       value: `${avgRps}`,
       subtext: `Peak: ${peakRps} req/s`,
       icon: Zap,
       color: 'text-yellow-400',
-      accent: 'border-yellow-400/30 shadow-glow-sm',
+      accent: 'border-yellow-400/40 shadow-glow-sm',
     },
     {
-      label: 'p95 Response Time',
+      label: 'p95 Tail Latency',
       value: `${p95} ms`,
       subtext: `Average: ${avgLat} ms`,
       icon: Clock,
@@ -44,7 +44,7 @@ export default function Scorecard({ summary = {}, duration = 0 }) {
       subtext: `${failed.toLocaleString()} failures`,
       icon: errorRate > 0 ? XCircle : CheckCircle,
       color: errorRate > 0 ? 'text-red-400' : 'text-emerald-400',
-      accent: errorRate > 0 ? 'border-red-800/40' : 'border-emerald-800/40',
+      accent: errorRate > 0 ? 'border-red-900/60' : 'border-dark-700',
     },
   ];
 

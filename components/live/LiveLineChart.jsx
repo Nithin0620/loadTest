@@ -15,7 +15,7 @@ import {
 export default function LiveLineChart({ data = [] }) {
   if (!data || data.length === 0) {
     return (
-      <div className="h-72 w-full bg-dark-900 border border-dark-800 rounded-2xl flex items-center justify-center text-xs font-mono text-zinc-500">
+      <div className="h-72 w-full bg-dark-900 border border-dark-700 rounded-2xl flex items-center justify-center text-xs font-mono text-zinc-500">
         Waiting for initial telemetry ticks...
       </div>
     );
@@ -30,10 +30,10 @@ export default function LiveLineChart({ data = [] }) {
   }));
 
   return (
-    <div className="bg-dark-900 border border-dark-800 rounded-2xl p-5 shadow-xl space-y-4">
+    <div className="bg-dark-900 border border-dark-700 rounded-2xl p-5 shadow-xl space-y-4">
       <div className="flex items-center justify-between">
         <h4 className="text-xs font-mono font-bold text-white uppercase tracking-wider">
-          Live Telemetry Timeline (RPS vs p95 Latency)
+          Telemetry Timeline (Throughput vs p95 Latency)
         </h4>
         <span className="text-[10px] font-mono text-zinc-500">
           Last {chartData.length} Seconds
@@ -43,7 +43,7 @@ export default function LiveLineChart({ data = [] }) {
       <div className="h-72 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid stroke="#1f1f28" strokeDasharray="3 3" vertical={false} />
+            <CartesianGrid stroke="#1f1f1f" strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="name"
               stroke="#52525b"
@@ -61,15 +61,15 @@ export default function LiveLineChart({ data = [] }) {
             <YAxis
               yAxisId="right"
               orientation="right"
-              stroke="#38bdf8"
+              stroke="#ffffff"
               fontSize={10}
               tickLine={false}
               fontFamily="monospace"
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#0a0a0d',
-                borderColor: '#272732',
+                backgroundColor: '#0a0a0a',
+                borderColor: '#262626',
                 borderRadius: '8px',
                 fontSize: '11px',
                 fontFamily: 'monospace',
@@ -94,8 +94,8 @@ export default function LiveLineChart({ data = [] }) {
               type="monotone"
               dataKey="p95"
               name="p95 Latency (ms)"
-              stroke="#38bdf8"
-              strokeWidth={2}
+              stroke="#ffffff"
+              strokeWidth={1.5}
               dot={false}
               isAnimationActive={false}
             />

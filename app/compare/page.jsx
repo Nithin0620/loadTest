@@ -11,8 +11,6 @@ import {
   Zap,
   Clock,
   AlertCircle,
-  CheckCircle2,
-  Layers,
 } from 'lucide-react';
 
 function CompareContent() {
@@ -80,17 +78,17 @@ function CompareContent() {
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <GitCompare className="w-5 h-5 text-yellow-400" />
-          <h1 className="text-xl sm:text-2xl font-mono font-bold text-white">
+          <h1 className="text-xl sm:text-2xl font-bold text-white">
             Compare Benchmark Runs
           </h1>
         </div>
         <p className="text-xs text-zinc-400">
-          Analyze performance deltas between baseline and candidate benchmarks (e.g. before/after optimizations).
+          Analyze performance deltas between baseline and candidate benchmarks.
         </p>
       </div>
 
       {/* Run Selectors */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-dark-900 border border-dark-800 rounded-2xl shadow-xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-dark-900 border border-dark-700 rounded-2xl shadow-xl">
         {/* Baseline Run A */}
         <div className="space-y-2">
           <label className="text-xs font-mono font-bold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -99,7 +97,7 @@ function CompareContent() {
           <select
             value={selectedA}
             onChange={(e) => setSelectedA(e.target.value)}
-            className="w-full bg-dark-950 border border-dark-700 rounded-xl px-4 py-2.5 text-xs font-mono text-zinc-200 focus:outline-none focus:border-yellow-400/80 cursor-pointer"
+            className="w-full bg-black border border-dark-700 rounded-xl px-4 py-2.5 text-xs font-mono text-zinc-200 focus:outline-none focus:border-yellow-400 cursor-pointer"
           >
             <option value="">Select Baseline Run...</option>
             {runsList.map((r) => (
@@ -112,13 +110,13 @@ function CompareContent() {
 
         {/* Candidate Run B */}
         <div className="space-y-2">
-          <label className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-sky-400" /> Run B (Candidate)
+          <label className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-white" /> Run B (Candidate)
           </label>
           <select
             value={selectedB}
             onChange={(e) => setSelectedB(e.target.value)}
-            className="w-full bg-dark-950 border border-dark-700 rounded-xl px-4 py-2.5 text-xs font-mono text-zinc-200 focus:outline-none focus:border-sky-400/80 cursor-pointer"
+            className="w-full bg-black border border-dark-700 rounded-xl px-4 py-2.5 text-xs font-mono text-zinc-200 focus:outline-none focus:border-yellow-400 cursor-pointer"
           >
             <option value="">Select Candidate Run...</option>
             {runsList.map((r) => (
@@ -131,7 +129,7 @@ function CompareContent() {
       </div>
 
       {error && (
-        <div className="p-4 bg-red-950/50 border border-red-800 rounded-xl text-xs font-mono text-red-300">
+        <div className="p-4 bg-dark-850 border border-yellow-400/50 rounded-xl text-xs font-mono text-yellow-300">
           {error}
         </div>
       )}
@@ -148,7 +146,7 @@ function CompareContent() {
           {/* Key Metric Diff Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* RPS Diff */}
-            <div className="bg-dark-900 border border-dark-800 rounded-2xl p-5 shadow-xl space-y-3">
+            <div className="bg-dark-900 border border-dark-700 rounded-2xl p-5 shadow-xl space-y-3">
               <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
                 <span className="flex items-center gap-1.5">
                   <Zap className="w-3.5 h-3.5 text-yellow-400" /> Throughput (RPS)
@@ -177,10 +175,10 @@ function CompareContent() {
             </div>
 
             {/* p95 Latency Diff */}
-            <div className="bg-dark-900 border border-dark-800 rounded-2xl p-5 shadow-xl space-y-3">
+            <div className="bg-dark-900 border border-dark-700 rounded-2xl p-5 shadow-xl space-y-3">
               <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
                 <span className="flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-sky-400" /> p95 Latency
+                  <Clock className="w-3.5 h-3.5 text-yellow-400" /> p95 Latency
                 </span>
                 <span
                   className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded ${
@@ -200,16 +198,16 @@ function CompareContent() {
                 <ArrowRight className="w-4 h-4 text-zinc-600" />
                 <div>
                   <div className="text-[10px] font-mono text-zinc-500 uppercase">Candidate (B)</div>
-                  <div className="text-xl font-bold font-mono text-sky-400">{diff.p95Latency.candidate} ms</div>
+                  <div className="text-xl font-bold font-mono text-white">{diff.p95Latency.candidate} ms</div>
                 </div>
               </div>
             </div>
 
             {/* Error Rate Diff */}
-            <div className="bg-dark-900 border border-dark-800 rounded-2xl p-5 shadow-xl space-y-3">
+            <div className="bg-dark-900 border border-dark-700 rounded-2xl p-5 shadow-xl space-y-3">
               <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
                 <span className="flex items-center gap-1.5">
-                  <AlertCircle className="w-3.5 h-3.5 text-red-400" /> Error Rate
+                  <AlertCircle className="w-3.5 h-3.5 text-yellow-400" /> Error Rate
                 </span>
                 <span
                   className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded ${
@@ -235,8 +233,8 @@ function CompareContent() {
           </div>
 
           {/* Full Side-by-Side Matrix Table */}
-          <div className="bg-dark-900 border border-dark-800 rounded-2xl overflow-hidden shadow-xl">
-            <div className="px-6 py-4 border-b border-dark-800 font-mono text-sm font-bold text-white uppercase tracking-wider">
+          <div className="bg-dark-900 border border-dark-700 rounded-2xl overflow-hidden shadow-xl">
+            <div className="px-6 py-4 border-b border-dark-800 font-mono text-xs font-bold text-white uppercase tracking-wider bg-black">
               Detailed Benchmark Diff Matrix
             </div>
 
@@ -245,7 +243,7 @@ function CompareContent() {
                 <tr>
                   <th className="py-3 px-6">Benchmark Metric</th>
                   <th className="py-3 px-6 text-yellow-400">Run A (Baseline)</th>
-                  <th className="py-3 px-6 text-sky-400">Run B (Candidate)</th>
+                  <th className="py-3 px-6 text-white">Run B (Candidate)</th>
                   <th className="py-3 px-6 text-right">Delta Difference</th>
                 </tr>
               </thead>

@@ -3,54 +3,39 @@
 @tailwind utilities;
 
 :root {
-  --background: #050505;
-  --foreground: #f4f4f5;
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #0a0a0a;
+  --card-foreground: #ffffff;
+  --border: #222222;
+  --muted: #141414;
+  --muted-foreground: #888888;
   --accent-yellow: #facc15;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: -0.01em;
   overflow-x: hidden;
 }
 
-/* Custom scrollbars */
+/* Custom scrollbar for pure black & yellow aesthetic */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0c;
+  background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #23232c;
-  border-radius: 3px;
+  background: #262626;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #eab308;
-}
-
-/* Glow utility classes */
-.cyber-border {
-  border: 1px solid #1f1f27;
-  transition: all 0.25s ease;
-}
-
-.cyber-border:hover {
-  border-color: rgba(250, 204, 21, 0.4);
-}
-
-.cyber-card {
-  background: radial-gradient(circle at top left, #121217, #0a0a0d);
-  border: 1px solid #1c1c24;
-}
-
-.cyber-card-glow {
-  background: radial-gradient(circle at top left, #16161d, #0d0d10);
-  border: 1px solid rgba(250, 204, 21, 0.25);
-  box-shadow: 0 0 25px rgba(250, 204, 21, 0.08);
+  background: #facc15;
 }

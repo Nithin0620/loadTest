@@ -16,7 +16,7 @@ export default function StatusCodeBar({
   const p5xx = total > 0 ? (status5xx / total) * 100 : 0;
 
   return (
-    <div className="bg-dark-900 border border-dark-800 rounded-2xl p-5 shadow-xl space-y-4">
+    <div className="bg-dark-900 border border-dark-700 rounded-2xl p-5 shadow-xl space-y-4">
       <div className="flex items-center justify-between">
         <h4 className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
           <BarChart2 className="w-3.5 h-3.5 text-yellow-400" />
@@ -28,7 +28,7 @@ export default function StatusCodeBar({
       </div>
 
       {/* Multi-segmented bar */}
-      <div className="w-full h-3 bg-dark-950 rounded-full overflow-hidden flex border border-dark-800">
+      <div className="w-full h-3 bg-black rounded-full overflow-hidden flex border border-dark-800">
         <div
           className="h-full bg-emerald-500 transition-all duration-300"
           style={{ width: `${p2xx}%` }}
@@ -48,7 +48,7 @@ export default function StatusCodeBar({
 
       {/* Counters Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
-        <div className="p-3 bg-dark-950 border border-dark-800 rounded-xl flex items-center gap-2.5">
+        <div className="p-3 bg-black border border-dark-800 rounded-xl flex items-center gap-2.5">
           <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
           <div>
             <div className="text-[10px] font-mono text-zinc-500 uppercase">2xx OK</div>
@@ -56,7 +56,7 @@ export default function StatusCodeBar({
           </div>
         </div>
 
-        <div className="p-3 bg-dark-950 border border-dark-800 rounded-xl flex items-center gap-2.5">
+        <div className="p-3 bg-black border border-dark-800 rounded-xl flex items-center gap-2.5">
           <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0" />
           <div>
             <div className="text-[10px] font-mono text-zinc-500 uppercase">4xx Warn</div>
@@ -64,7 +64,7 @@ export default function StatusCodeBar({
           </div>
         </div>
 
-        <div className="p-3 bg-dark-950 border border-dark-800 rounded-xl flex items-center gap-2.5">
+        <div className="p-3 bg-black border border-dark-800 rounded-xl flex items-center gap-2.5">
           <XCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
           <div>
             <div className="text-[10px] font-mono text-zinc-500 uppercase">5xx Error</div>
@@ -72,8 +72,8 @@ export default function StatusCodeBar({
           </div>
         </div>
 
-        <div className="p-3 bg-dark-950 border border-dark-800 rounded-xl flex items-center gap-2.5">
-          <div className="w-4 h-4 rounded-full border border-yellow-400/40 text-yellow-400 flex items-center justify-center text-[10px] font-bold">
+        <div className="p-3 bg-black border border-dark-800 rounded-xl flex items-center gap-2.5">
+          <div className="w-4 h-4 rounded-full border border-yellow-400/40 text-yellow-400 flex items-center justify-center text-[10px] font-bold font-mono">
             %
           </div>
           <div>

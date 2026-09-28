@@ -10,12 +10,12 @@ export default {
     extend: {
       colors: {
         dark: {
-          950: '#050505',
-          900: '#0a0a0c',
-          850: '#111115',
-          800: '#18181f',
-          700: '#23232c',
-          600: '#32323e',
+          950: '#000000',
+          900: '#0a0a0a',
+          850: '#121212',
+          800: '#1c1c1c',
+          700: '#262626',
+          600: '#383838',
         },
         yellow: {
           300: '#fde047',
@@ -24,12 +24,10 @@ export default {
           600: '#ca8a04',
           glow: '#ffe600',
         },
-        cyber: {
-          green: '#10b981',
-          red: '#ef4444',
-          amber: '#f59e0b',
-          blue: '#3b82f6',
-        }
+      },
+      fontFamily: {
+        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
       },
       boxShadow: {
         'glow-sm': '0 0 10px rgba(250, 204, 21, 0.2)',
@@ -38,16 +36,6 @@ export default {
         'glow-green': '0 0 15px rgba(16, 185, 129, 0.25)',
         'glow-red': '0 0 15px rgba(239, 68, 68, 0.25)',
       },
-      animation: {
-        'pulse-fast': 'pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
-      },
-      keyframes: {
-        pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 15px rgba(250, 204, 21, 0.2)' },
-          '50%': { boxShadow: '0 0 28px rgba(250, 204, 21, 0.45)' },
-        }
-      }
     },
   },
   plugins: [],

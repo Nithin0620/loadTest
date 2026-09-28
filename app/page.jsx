@@ -12,13 +12,13 @@ export default function HomePage() {
       <div className="text-center space-y-3 max-w-3xl mx-auto pt-4 pb-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-yellow-400 text-xs font-mono mb-2 shadow-glow-sm">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>k6-Powered Real-time Load Generation</span>
+          <span>k6-Powered Load Generation</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-black font-mono tracking-tight text-white">
-          STRESS TEST YOUR <span className="text-yellow-400">APIs</span> WITH ZERO FRICTION
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+          High-Velocity Load Testing <span className="text-yellow-400">Without Limits</span>
         </h1>
-        <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-          Simulate hundreds of concurrent virtual users, inspect real-time RPS & latency percentiles, auto-detect breaking points, and compare performance benchmarks.
+        <p className="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+          Simulate hundreds of concurrent virtual users, inspect real-time throughput & tail latencies, auto-detect breaking points, and benchmark endpoints.
         </p>
       </div>
 
@@ -27,14 +27,14 @@ export default function HomePage() {
         {[
           { icon: Gauge, label: 'Sub-millisecond Precision' },
           { icon: TrendingUp, label: 'Realtime SSE Telemetry' },
-          { icon: Zap, label: 'k6 High-Throughput Engine' },
-          { icon: ShieldCheck, label: 'SLO & Breaking Point Detection' },
+          { icon: Zap, label: 'k6 Core Engine' },
+          { icon: ShieldCheck, label: 'SLO Criteria & Breaking Points' },
         ].map((feat, i) => {
           const Icon = feat.icon;
           return (
             <div
               key={i}
-              className="flex items-center gap-2 p-2.5 rounded-xl bg-dark-900/60 border border-dark-800 text-xs font-mono text-zinc-300"
+              className="flex items-center gap-2 p-3 rounded-xl bg-dark-900 border border-dark-700 text-xs text-zinc-300 font-medium"
             >
               <Icon className="w-4 h-4 text-yellow-400 flex-shrink-0" />
               <span className="truncate">{feat.label}</span>

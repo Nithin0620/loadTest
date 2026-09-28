@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Play, ArrowUpRight, Clock, Activity, CheckCircle, AlertTriangle, XCircle, RotateCcw } from 'lucide-react';
+import { ArrowUpRight, Activity, CheckCircle, AlertTriangle, XCircle, RotateCcw } from 'lucide-react';
 
 export default function RecentRunsTable() {
   const [runs, setRuns] = useState([]);
@@ -28,34 +28,34 @@ export default function RecentRunsTable() {
 
   if (loading) {
     return (
-      <div className="p-8 border border-dark-800 bg-dark-900 rounded-2xl text-center text-zinc-500 font-mono text-xs">
-        Loading test history...
+      <div className="p-8 border border-dark-700 bg-dark-900 rounded-2xl text-center text-zinc-500 font-mono text-xs">
+        Loading benchmark history...
       </div>
     );
   }
 
   if (runs.length === 0) {
     return (
-      <div className="p-8 border border-dark-800 bg-dark-900 rounded-2xl text-center text-zinc-500 font-mono text-xs">
-        No recent load test runs found. Launch your first test above!
+      <div className="p-8 border border-dark-700 bg-dark-900 rounded-2xl text-center text-zinc-500 text-xs">
+        No recent test runs found. Launch your first benchmark above!
       </div>
     );
   }
 
   return (
-    <div className="bg-dark-900 border border-dark-800 rounded-2xl overflow-hidden shadow-xl">
-      <div className="px-6 py-4 border-b border-dark-800 flex items-center justify-between">
+    <div className="bg-dark-900 border border-dark-700 rounded-2xl overflow-hidden shadow-2xl">
+      <div className="px-6 py-4 border-b border-dark-800 flex items-center justify-between bg-black">
         <div className="flex items-center gap-2">
           <Activity className="w-4 h-4 text-yellow-400" />
-          <h3 className="text-sm font-mono font-bold text-white uppercase tracking-wider">
+          <h3 className="text-sm font-semibold text-white">
             Recent Test Runs
           </h3>
         </div>
         <button
           onClick={fetchRuns}
-          className="text-xs text-zinc-400 hover:text-yellow-400 flex items-center gap-1 font-mono transition-colors"
+          className="text-xs text-zinc-400 hover:text-yellow-400 flex items-center gap-1.5 transition-colors cursor-pointer"
         >
-          <RotateCcw className="w-3 h-3" /> Refresh
+          <RotateCcw className="w-3.5 h-3.5" /> Refresh
         </button>
       </div>
 
@@ -63,13 +63,13 @@ export default function RecentRunsTable() {
         <table className="w-full text-left text-xs font-mono">
           <thead className="bg-dark-950 text-zinc-400 border-b border-dark-800">
             <tr>
-              <th className="py-3 px-4">Status</th>
-              <th className="py-3 px-4">Target Endpoint</th>
-              <th className="py-3 px-4">Workload</th>
-              <th className="py-3 px-4">Throughput</th>
-              <th className="py-3 px-4">p95 Latency</th>
-              <th className="py-3 px-4">Success %</th>
-              <th className="py-3 px-4 text-right">Actions</th>
+              <th className="py-3 px-4 font-medium">Status</th>
+              <th className="py-3 px-4 font-medium">Target Endpoint</th>
+              <th className="py-3 px-4 font-medium">Workload</th>
+              <th className="py-3 px-4 font-medium">Throughput</th>
+              <th className="py-3 px-4 font-medium">p95 Latency</th>
+              <th className="py-3 px-4 font-medium">Success %</th>
+              <th className="py-3 px-4 text-right font-medium">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-dark-800 text-zinc-300">
@@ -79,26 +79,26 @@ export default function RecentRunsTable() {
               const status = run.status;
 
               return (
-                <tr key={run._id} className="hover:bg-dark-850/50 transition-colors">
+                <tr key={run._id} className="hover:bg-dark-850/60 transition-colors">
                   {/* Status */}
                   <td className="py-3.5 px-4 whitespace-nowrap">
                     {status === 'completed' && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] bg-emerald-950/80 text-emerald-400 border border-emerald-800/50">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] bg-emerald-950/80 text-emerald-400 border border-emerald-800/50">
                         <CheckCircle className="w-3 h-3" /> Done
                       </span>
                     )}
                     {status === 'running' && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] bg-yellow-950/80 text-yellow-400 border border-yellow-800/50 animate-pulse">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] bg-yellow-950/80 text-yellow-400 border border-yellow-800/50 animate-pulse">
                         <span className="w-2 h-2 rounded-full bg-yellow-400 animate-ping" /> Running
                       </span>
                     )}
                     {status === 'failed' && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] bg-red-950/80 text-red-400 border border-red-800/50">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] bg-red-950/80 text-red-400 border border-red-800/50">
                         <XCircle className="w-3 h-3" /> Failed
                       </span>
                     )}
                     {status === 'cancelled' && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] bg-zinc-900 text-zinc-400 border border-zinc-700">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] bg-zinc-900 text-zinc-400 border border-zinc-700">
                         <AlertTriangle className="w-3 h-3" /> Cancelled
                       </span>
                     )}
@@ -107,7 +107,7 @@ export default function RecentRunsTable() {
                   {/* Target Endpoint */}
                   <td className="py-3.5 px-4 font-mono max-w-xs truncate">
                     <div className="flex items-center gap-2">
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-dark-800 text-yellow-400 border border-dark-700">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-yellow-400 text-black">
                         {cfg.httpMethod || 'GET'}
                       </span>
                       <span className="truncate text-zinc-200" title={cfg.targetUrl}>
@@ -124,11 +124,11 @@ export default function RecentRunsTable() {
                   </td>
 
                   {/* Throughput */}
-                  <td className="py-3.5 px-4 whitespace-nowrap text-zinc-200">
+                  <td className="py-3.5 px-4 whitespace-nowrap text-white font-semibold">
                     {summary.avgRps ? `${summary.avgRps} req/s` : '—'}
                   </td>
 
-                  {/* p95 Latency */}
+                  {/* p95 Latency (Stats color) */}
                   <td className="py-3.5 px-4 whitespace-nowrap">
                     {summary.latency?.p95 ? (
                       <span className={`font-bold ${summary.latency.p95 > 500 ? 'text-amber-400' : 'text-emerald-400'}`}>
@@ -139,10 +139,10 @@ export default function RecentRunsTable() {
                     )}
                   </td>
 
-                  {/* Success Rate */}
+                  {/* Success Rate (Stats color) */}
                   <td className="py-3.5 px-4 whitespace-nowrap">
                     {summary.totalRequests ? (
-                      <span className={summary.errorRate > 0 ? 'text-amber-400' : 'text-emerald-400'}>
+                      <span className={summary.errorRate > 0 ? 'text-amber-400 font-bold' : 'text-emerald-400 font-bold'}>
                         {(100 - summary.errorRate).toFixed(1)}%
                       </span>
                     ) : (
@@ -154,9 +154,9 @@ export default function RecentRunsTable() {
                   <td className="py-3.5 px-4 text-right whitespace-nowrap">
                     <Link
                       href={status === 'running' ? `/runs/${run._id}` : `/runs/${run._id}/report`}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-dark-800 hover:bg-yellow-400 hover:text-black text-zinc-300 text-[11px] transition-all font-semibold"
+                      className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-dark-850 hover:bg-yellow-400 hover:text-black text-zinc-300 text-[11px] transition-all font-semibold border border-dark-700 hover:border-yellow-400"
                     >
-                      {status === 'running' ? 'Live View' : 'View Report'}
+                      {status === 'running' ? 'Live Telemetry' : 'View Report'}
                       <ArrowUpRight className="w-3 h-3" />
                     </Link>
                   </td>
