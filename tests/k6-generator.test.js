@@ -47,7 +47,7 @@ test('k6 Script Generator Test Suite', async (t) => {
     assert.ok(script.includes('"Authorization": "Bearer jwt-abc-xyz"'));
     assert.ok(script.includes('"X-App-Env": "staging"'));
     assert.ok(script.includes('http.post(TARGET_URL, PAYLOAD'));
-    assert.ok(script.includes('"p95<300"'));
+    assert.ok(script.includes('"p(95)<300"'));
   });
 
   await t.test('should generate constant RPS scenario script', () => {
@@ -62,5 +62,24 @@ test('k6 Script Generator Test Suite', async (t) => {
     assert.ok(script.includes('"executor": "constant-arrival-rate"'));
     assert.ok(script.includes('"rate": 200'));
     assert.ok(script.includes('"duration": "20s"'));
+  });
+
+  await t.test('should normalize legacy threshold operators and percentage error rates', () => {
+    const config = {
+      targetUrl: 'https://api.example.com/test',
+      httpMethod: 'GET',
+      loadProfile: { type: 'constant_vus', vus: 5, duration: '5s' },
+      thresholds: [
+        { metric: 'http_req_duration', operator: 'p95<', value: 400 },
+        { metric: 'http_req_duration', operator: 'p99<', value: 800 },
+        { metric: 'http_req_failed', operator: 'rate<', value: 5 },
+      ]
+    };
+
+    const script = generateK6Script(config, 'run-norm');
+
+    assert.ok(script.includes('"p(95)<400"'));
+    assert.ok(script.includes('"p(99)<800"'));
+    assert.ok(script.includes('"rate<0.05"'));
   });
 });

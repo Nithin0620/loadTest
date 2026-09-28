@@ -167,6 +167,19 @@ export default function ReportPage() {
         </div>
       </div>
 
+      {run.status === 'failed' && (
+        <div className="p-4 bg-red-950/70 border border-red-800 rounded-2xl flex flex-col gap-2 text-xs font-mono text-red-300">
+          <div className="flex items-center gap-2 font-bold text-red-400">
+            <span>Execution Failed</span>
+          </div>
+          {run.errorMessage && (
+            <pre className="p-2.5 bg-black/40 border border-red-900/60 rounded-lg text-[11px] text-red-300 whitespace-pre-wrap font-mono overflow-x-auto">
+              {run.errorMessage}
+            </pre>
+          )}
+        </div>
+      )}
+
       {/* Hero Scorecard */}
       <Scorecard summary={summary} duration={run.durationSeconds} />
 

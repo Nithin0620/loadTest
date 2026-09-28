@@ -15,8 +15,8 @@ const ThresholdItemSchema = new mongoose.Schema({
   metric: { type: String, default: 'http_req_duration' },
   operator: { 
     type: String, 
-    enum: ['p95<', 'p99<', 'avg<', 'max<', 'rate<'], 
-    default: 'p95<' 
+    enum: ['p(95)<', 'p(99)<', 'p(90)<', 'p95<', 'p99<', 'p90<', 'avg<', 'max<', 'min<', 'med<', 'rate<'], 
+    default: 'p(95)<' 
   },
   value: { type: Number, default: 500 }
 }, { _id: false });

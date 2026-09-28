@@ -46,7 +46,7 @@ export default function AdvancedConfigTabs({
 
   // Thresholds helper
   const addThreshold = () => {
-    setThresholds([...thresholds, { metric: 'http_req_duration', operator: 'p95<', value: 500 }]);
+    setThresholds([...thresholds, { metric: 'http_req_duration', operator: 'p(95)<', value: 500 }]);
   };
 
   const updateThreshold = (index, field, val) => {
@@ -308,8 +308,8 @@ export default function AdvancedConfigTabs({
                       onChange={(e) => updateThreshold(idx, 'operator', e.target.value)}
                       className="bg-dark-950 border border-dark-700 rounded-md px-2 py-1.5 text-xs font-mono text-zinc-200"
                     >
-                      <option value="p95<">p95 &lt;</option>
-                      <option value="p99<">p99 &lt;</option>
+                      <option value="p(95)<">p95 &lt;</option>
+                      <option value="p(99)<">p99 &lt;</option>
                       <option value="avg<">avg &lt;</option>
                       <option value="max<">max &lt;</option>
                       <option value="rate<">rate &lt;</option>

@@ -34,7 +34,7 @@ export default function QuickTestForm() {
   const [bodyType, setBodyType] = useState('none');
   const [bodyContent, setBodyContent] = useState('');
   const [thresholds, setThresholds] = useState([
-    { metric: 'http_req_duration', operator: 'p95<', value: 500 },
+    { metric: 'http_req_duration', operator: 'p(95)<', value: 500 },
   ]);
 
   // Handle cURL import

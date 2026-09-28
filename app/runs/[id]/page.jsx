@@ -43,6 +43,9 @@ export default function LiveTestPage() {
           setConfig(data.run.snapshotConfig);
           if (data.run.status === 'completed' || data.run.status === 'failed' || data.run.status === 'cancelled') {
             setStatus(data.run.status);
+            if (data.run.errorMessage) {
+              setErrorMsg(data.run.errorMessage);
+            }
           }
         }
       } catch {
@@ -67,6 +70,8 @@ export default function LiveTestPage() {
         }
         if (initData.status === 'running') {
           setStatus('running');
+        } else if (initData.status === 'failed' || initData.status === 'completed' || initData.status === 'cancelled') {
+          setStatus(initData.status);
         }
       } catch {}
     });
@@ -94,12 +99,17 @@ export default function LiveTestPage() {
       try {
         const doneData = JSON.parse(e.data);
         setStatus(doneData.status || 'completed');
+        if (doneData.status === 'failed' && doneData.errorMessage) {
+          setErrorMsg(doneData.errorMessage);
+        }
         es.close();
 
-        // Redirect to report page after brief delay
-        setTimeout(() => {
-          router.push(`/runs/${runId}/report`);
-        }, 1500);
+        // Redirect to report page after brief delay if completed
+        if (doneData.status === 'completed') {
+          setTimeout(() => {
+            router.push(`/runs/${runId}/report`);
+          }, 1500);
+        }
       } catch {}
     });
 
@@ -179,6 +189,12 @@ export default function LiveTestPage() {
               Test Finished — View Full Report
               <ArrowRight className="w-4 h-4" />
             </Link>
+          )}
+          {status === 'failed' && (
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-950 border border-red-800 text-red-400 text-xs font-mono font-bold shadow-glow-red">
+              <AlertCircle className="w-3.5 h-3.5 text-red-400" />
+              TEST FAILED
+            </div>
           )}
           {status === 'cancelled' && (
             <div className="px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-700 text-zinc-400 text-xs font-mono font-bold">
