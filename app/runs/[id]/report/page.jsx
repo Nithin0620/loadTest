@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -43,10 +43,7 @@ export default function ReportPage() {
   const router = useRouter();
   const runId = params.id;
 
-  const reportRef = useRef(null);
-
-  const [run, setRun] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [run, setRun] = useState(null);  const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [reRunning, setReRunning] = useState(false);
   const [exportingPdf, setExportingPdf] = useState(false);
@@ -112,14 +109,14 @@ export default function ReportPage() {
 
   // ── Export PDF ───────────────────────────────────────────────────────────
   const handleExportPdf = async () => {
-    if (!reportRef.current || exportingPdf) return;
+    if (exportingPdf) return;
     setExportingPdf(true);
     try {
       const { exportReportPdf } = await import('@/lib/exportPdf');
       const hostname = new URL(config.targetUrl || 'http://unknown').hostname;
       const testType = config.testType || 'load';
       const filename = `benchley-${testType}-${hostname}-${runId.slice(-6)}`;
-      await exportReportPdf(reportRef.current, filename);
+      await exportReportPdf(run, filename);
     } catch (err) {
       console.error('[PDF export]', err);
     } finally {
@@ -228,7 +225,7 @@ export default function ReportPage() {
         </div>
 
         {/* ── Printable report area ────────────────────────────────────── */}
-        <div ref={reportRef} className="space-y-8">
+        <div className="space-y-8">
 
           {/* Report header — visible in PDF */}
           <div className="flex items-center justify-between pb-4 border-b border-dark-800">
