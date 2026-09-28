@@ -39,6 +39,11 @@ const TestConfigSchema = new mongoose.Schema({
   },
   bodyType: { type: String, enum: ['none', 'json', 'raw'], default: 'none' },
   bodyContent: { type: String, default: '' },
+  testType: {
+    type: String,
+    enum: ['load', 'stress', 'spike', 'soak'],
+    default: 'load'
+  },
   loadProfile: {
     type: { 
       type: String, 

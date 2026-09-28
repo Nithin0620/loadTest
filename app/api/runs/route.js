@@ -35,8 +35,11 @@ export async function POST(request) {
     const vus = Math.min(Number(body.loadProfile?.vus || body.vus || 10), 1000);
     const targetRps = Math.min(Number(body.loadProfile?.targetRps || 100), 2500);
 
+    const testType = ['load', 'stress', 'spike', 'soak'].includes(body.testType) ? body.testType : 'load';
+
     const snapshotConfig = {
-      name: body.name || `Load Test against ${new URL(body.targetUrl).hostname}`,
+      name: body.name || `${testType.charAt(0).toUpperCase() + testType.slice(1)} Test against ${new URL(body.targetUrl).hostname}`,
+      testType,
       targetUrl: body.targetUrl,
       httpMethod: (body.httpMethod || 'GET').toUpperCase(),
       headers: Array.isArray(body.headers) ? body.headers : [],

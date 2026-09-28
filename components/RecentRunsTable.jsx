@@ -2,7 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, Activity, CheckCircle, AlertTriangle, XCircle, RotateCcw } from 'lucide-react';
+import { ArrowUpRight, Activity, CheckCircle, AlertTriangle, XCircle, RotateCcw, TrendingUp, Flame, Clock } from 'lucide-react';
+
+const TEST_TYPE_META = {
+  load:   { label: 'Load',   color: 'bg-yellow-400/15 text-yellow-400 border-yellow-400/30' },
+  stress: { label: 'Stress', color: 'bg-orange-400/15 text-orange-400 border-orange-400/30' },
+  spike:  { label: 'Spike',  color: 'bg-red-400/15    text-red-400    border-red-400/30'    },
+  soak:   { label: 'Soak',   color: 'bg-blue-400/15   text-blue-400   border-blue-400/30'   },
+};
 
 export default function RecentRunsTable() {
   const [runs, setRuns] = useState([]);
@@ -118,9 +125,20 @@ export default function RecentRunsTable() {
 
                   {/* Workload */}
                   <td className="py-3.5 px-4 whitespace-nowrap text-zinc-400">
-                    {cfg.loadProfile?.type === 'constant_rps'
-                      ? `${cfg.loadProfile.targetRps} RPS (${cfg.loadProfile.duration})`
-                      : `${cfg.loadProfile?.vus || 50} VUs (${cfg.loadProfile?.duration || '30s'})`}
+                    <div className="flex flex-col gap-1">
+                      {cfg.testType && TEST_TYPE_META[cfg.testType] && (
+                        <span className={`self-start px-2 py-0.5 rounded-full text-[10px] font-bold border font-mono ${TEST_TYPE_META[cfg.testType].color}`}>
+                          {TEST_TYPE_META[cfg.testType].label}
+                        </span>
+                      )}
+                      <span className="text-[11px] font-mono">
+                        {cfg.loadProfile?.type === 'constant_rps'
+                          ? `${cfg.loadProfile.targetRps} RPS · ${cfg.loadProfile.duration}`
+                          : cfg.loadProfile?.type === 'ramping_vus'
+                          ? `${cfg.loadProfile.stages?.length || '?'} stages`
+                          : `${cfg.loadProfile?.vus || 50} VUs · ${cfg.loadProfile?.duration || '30s'}`}
+                      </span>
+                    </div>
                   </td>
 
                   {/* Throughput */}

@@ -18,6 +18,7 @@ import {
   BarChart3,
 } from 'lucide-react';
 import { BenchleyLogo } from './Logo';
+import PerfTestingGuide from './PerfTestingGuide';
 
 export default function LandingPage() {
   const workflowUrl = process.env.NEXT_PUBLIC_WORKFLOW_URL || 'https://workflow.ssh.net.in';
@@ -38,13 +39,13 @@ export default function LandingPage() {
         </h1>
 
         <p className="text-zinc-400 text-sm sm:text-lg leading-relaxed max-w-2xl mx-auto font-normal">
-          Benchley orchestrates high-throughput HTTP load tests, streams real-time second-by-second performance telemetry, and auto-detects system breaking points before production traffic hits.
+          High-throughput HTTP load tests with real-time telemetry, SLO gates, and run comparison — powered by k6.
         </p>
 
         {/* Hero CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
           <a
-            href={`${workflowUrl}/login?redirect_to=https://benchley.ssh.net.in/`}
+            href={`${workflowUrl}/login?redirect_to=https://benchley.ssh.net.in/test-runner`}
             className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-sm text-white bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.15] hover:border-yellow-400/60 transition-all duration-150 group shadow-lg"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -73,7 +74,7 @@ export default function LandingPage() {
               k6 Sub-Millisecond Engine
             </h3>
             <p className="text-xs text-zinc-400 leading-relaxed font-mono">
-              Compiles test definitions into isolated Go-powered k6 execution scripts with minimal CPU overhead and microsecond timing accuracy.
+              Go-powered k6 engine. Microsecond timing, minimal CPU overhead.
             </p>
           </div>
 
@@ -85,7 +86,7 @@ export default function LandingPage() {
               Real-Time SSE Telemetry
             </h3>
             <p className="text-xs text-zinc-400 leading-relaxed font-mono">
-              Live second-by-second event streaming with speedometer RPS gauges, rolling p50/p90/p95/p99 latency sparklines, and active VU tracking.
+              Second-by-second RPS, p50/p95/p99 latency, and VU tracking — live.
             </p>
           </div>
 
@@ -97,7 +98,7 @@ export default function LandingPage() {
               Side-by-Side Run Diffing
             </h3>
             <p className="text-xs text-zinc-400 leading-relaxed font-mono">
-              Compare baseline benchmarks against candidate releases with delta percentage pills to catch latency regressions before merging.
+              Compare baseline vs candidate with delta pills. Catch regressions before merging.
             </p>
           </div>
         </div>
@@ -160,13 +161,13 @@ export default function LandingPage() {
             </p>
             <div className="flex items-center gap-3 mt-5">
               <Link
-                href="/login"
+                href="/login?redirect=/test-runner"
                 className="px-5 py-2.5 rounded-xl font-mono text-xs font-semibold text-white bg-white/[0.08] hover:bg-white/[0.15] border border-white/[0.15] transition-all"
               >
                 Sign In
               </Link>
               <Link
-                href="/signup"
+                href="/signup?redirect=/test-runner"
                 className="px-5 py-2.5 rounded-xl font-mono text-xs font-bold bg-yellow-400 hover:bg-yellow-300 text-black shadow-glow-sm transition-all"
               >
                 Create Account →
@@ -174,6 +175,11 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Performance Testing Reference */}
+      <section className="pt-4">
+        <PerfTestingGuide />
       </section>
     </div>
   );

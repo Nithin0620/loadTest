@@ -13,6 +13,7 @@ import {
   ExternalLink,
   ChevronDown,
   LayoutGrid,
+  Info,
 } from 'lucide-react';
 import { BenchleyLogo } from './Logo';
 import { useAuth } from '@/lib/auth-context';
@@ -44,8 +45,9 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { label: 'Test Runner', href: '/', icon: Zap },
+    { label: 'Test Runner', href: '/test-runner', icon: Zap },
     { label: 'Compare Runs', href: '/compare', icon: GitCompare },
+    { label: 'About Benchley', href: '/benchley', icon: Info },
   ];
 
   const getInitials = (name, email) => {
@@ -115,7 +117,7 @@ export default function Navbar() {
           </div>
 
           <Link
-            href="/"
+            href="/test-runner"
             className="flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-[13px] font-semibold bg-yellow-400 text-black hover:bg-yellow-300 transition-all duration-150 shadow-glow-sm active:scale-[0.98]"
           >
             New Test

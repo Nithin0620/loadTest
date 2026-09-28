@@ -4,6 +4,23 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Activity, ArrowRight, ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
+
+const TEST_TYPE_META = {
+  load:   { label: 'Load Test',   color: 'bg-yellow-400/15 text-yellow-400 border-yellow-400/30' },
+  stress: { label: 'Stress Test', color: 'bg-orange-400/15 text-orange-400 border-orange-400/30' },
+  spike:  { label: 'Spike Test',  color: 'bg-red-400/15    text-red-400    border-red-400/30'    },
+  soak:   { label: 'Soak Test',   color: 'bg-blue-400/15   text-blue-400   border-blue-400/30'   },
+};
+
+function TestTypeBadge({ type }) {
+  const meta = TEST_TYPE_META[type];
+  if (!meta) return null;
+  return (
+    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border font-mono ${meta.color}`}>
+      {meta.label}
+    </span>
+  );
+}
 import MetricGauge from '@/components/live/MetricGauge';
 import LiveLineChart from '@/components/live/LiveLineChart';
 import StatusCodeBar from '@/components/live/StatusCodeBar';
@@ -164,6 +181,12 @@ export default function LiveTestPage() {
             <div className="flex items-center gap-3 text-xs font-mono text-zinc-400">
               <span>Run ID: <span className="text-zinc-200">{runId}</span></span>
               <span>•</span>
+              {config?.testType && (
+                <>
+                  <TestTypeBadge type={config.testType} />
+                  <span>•</span>
+                </>
+              )}
               <span>Profile: <span className="text-yellow-400">{config?.loadProfile?.type || 'constant_vus'}</span></span>
             </div>
           </div>
