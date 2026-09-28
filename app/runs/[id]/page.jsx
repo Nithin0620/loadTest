@@ -8,6 +8,7 @@ import MetricGauge from '@/components/live/MetricGauge';
 import LiveLineChart from '@/components/live/LiveLineChart';
 import StatusCodeBar from '@/components/live/StatusCodeBar';
 import ProgressBar from '@/components/live/ProgressBar';
+import AuthGuard from '@/components/AuthGuard';
 
 export default function LiveTestPage() {
   const params = useParams();
@@ -147,97 +148,99 @@ export default function LiveTestPage() {
   const errorRate = totalRequests > 0 ? ((status4xx + status5xx) / totalRequests) * 100 : 0;
 
   return (
-    <div className="space-y-6 py-4">
-      {/* Top Header Card */}
-      <div className="bg-dark-900 border border-dark-700 rounded-2xl p-6 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
+    <AuthGuard>
+      <div className="space-y-6 py-4">
+        {/* Top Header Card */}
+        <div className="bg-dark-900 border border-dark-700 rounded-2xl p-6 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-3">
+              <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-yellow-400 text-black">
+                {config?.httpMethod || 'GET'}
+              </span>
+              <h2 className="text-base sm:text-lg font-mono font-bold text-white truncate max-w-xl" title={config?.targetUrl}>
+                {config?.targetUrl || 'Loading target endpoint...'}
+              </h2>
+            </div>
+            <div className="flex items-center gap-3 text-xs font-mono text-zinc-400">
+              <span>Run ID: <span className="text-zinc-200">{runId}</span></span>
+              <span>•</span>
+              <span>Profile: <span className="text-yellow-400">{config?.loadProfile?.type || 'constant_vus'}</span></span>
+            </div>
+          </div>
+
+          {/* Live Status Badge */}
           <div className="flex items-center gap-3">
-            <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-yellow-400 text-black">
-              {config?.httpMethod || 'GET'}
-            </span>
-            <h2 className="text-base sm:text-lg font-mono font-bold text-white truncate max-w-xl" title={config?.targetUrl}>
-              {config?.targetUrl || 'Loading target endpoint...'}
-            </h2>
-          </div>
-          <div className="flex items-center gap-3 text-xs font-mono text-zinc-400">
-            <span>Run ID: <span className="text-zinc-200">{runId}</span></span>
-            <span>•</span>
-            <span>Profile: <span className="text-yellow-400">{config?.loadProfile?.type || 'constant_vus'}</span></span>
+            {status === 'running' && (
+              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/40 text-yellow-400 text-xs font-mono font-bold shadow-glow-sm">
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-ping" />
+                RUNNING LOAD TEST
+              </div>
+            )}
+            {status === 'connecting' && (
+              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-dark-850 border border-dark-700 text-zinc-300 text-xs font-mono">
+                <RefreshCw className="w-3.5 h-3.5 animate-spin text-yellow-400" />
+                Connecting Engine...
+              </div>
+            )}
+            {status === 'completed' && (
+              <Link
+                href={`/runs/${runId}/report`}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-400 text-black text-xs font-mono font-bold shadow-glow-sm hover:bg-yellow-300 transition-all"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                Test Finished — View Report
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            )}
+            {status === 'failed' && (
+              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-950 border border-red-800 text-red-400 text-xs font-mono font-bold shadow-glow-red">
+                <AlertCircle className="w-3.5 h-3.5 text-red-400" />
+                TEST FAILED
+              </div>
+            )}
+            {status === 'cancelled' && (
+              <div className="px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-700 text-zinc-400 text-xs font-mono font-bold">
+                TEST CANCELLED
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Live Status Badge */}
-        <div className="flex items-center gap-3">
-          {status === 'running' && (
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/40 text-yellow-400 text-xs font-mono font-bold shadow-glow-sm">
-              <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-ping" />
-              RUNNING LOAD TEST
-            </div>
-          )}
-          {status === 'connecting' && (
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-dark-850 border border-dark-700 text-zinc-300 text-xs font-mono">
-              <RefreshCw className="w-3.5 h-3.5 animate-spin text-yellow-400" />
-              Connecting Engine...
-            </div>
-          )}
-          {status === 'completed' && (
-            <Link
-              href={`/runs/${runId}/report`}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-400 text-black text-xs font-mono font-bold shadow-glow-sm hover:bg-yellow-300 transition-all"
-            >
-              <ShieldCheck className="w-4 h-4" />
-              Test Finished — View Report
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          )}
-          {status === 'failed' && (
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-950 border border-red-800 text-red-400 text-xs font-mono font-bold shadow-glow-red">
-              <AlertCircle className="w-3.5 h-3.5 text-red-400" />
-              TEST FAILED
-            </div>
-          )}
-          {status === 'cancelled' && (
-            <div className="px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-700 text-zinc-400 text-xs font-mono font-bold">
-              TEST CANCELLED
-            </div>
-          )}
-        </div>
+        {errorMsg && (
+          <div className="p-4 bg-red-950/60 border border-red-800 rounded-2xl flex items-center gap-3 text-xs font-mono text-red-300">
+            <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+            <span>{errorMsg}</span>
+          </div>
+        )}
+
+        {/* Progress Bar & Emergency Stop */}
+        <ProgressBar
+          elapsedSeconds={elapsedSeconds}
+          totalDurationSeconds={estimatedDuration}
+          onCancel={handleCancel}
+          cancelling={cancelling}
+        />
+
+        {/* Metric Gauges */}
+        <MetricGauge
+          currentRps={currentRps}
+          peakRps={peakRps}
+          activeVus={activeVus}
+          maxVus={targetMaxVus}
+        />
+
+        {/* Live Timeline Chart */}
+        <LiveLineChart data={timeSeries} />
+
+        {/* HTTP Status Code & Error Rate */}
+        <StatusCodeBar
+          status2xx={status2xx}
+          status4xx={status4xx}
+          status5xx={status5xx}
+          totalRequests={totalRequests}
+          errorRate={errorRate}
+        />
       </div>
-
-      {errorMsg && (
-        <div className="p-4 bg-red-950/60 border border-red-800 rounded-2xl flex items-center gap-3 text-xs font-mono text-red-300">
-          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
-          <span>{errorMsg}</span>
-        </div>
-      )}
-
-      {/* Progress Bar & Emergency Stop */}
-      <ProgressBar
-        elapsedSeconds={elapsedSeconds}
-        totalDurationSeconds={estimatedDuration}
-        onCancel={handleCancel}
-        cancelling={cancelling}
-      />
-
-      {/* Metric Gauges */}
-      <MetricGauge
-        currentRps={currentRps}
-        peakRps={peakRps}
-        activeVus={activeVus}
-        maxVus={targetMaxVus}
-      />
-
-      {/* Live Timeline Chart */}
-      <LiveLineChart data={timeSeries} />
-
-      {/* HTTP Status Code & Error Rate */}
-      <StatusCodeBar
-        status2xx={status2xx}
-        status4xx={status4xx}
-        status5xx={status5xx}
-        totalRequests={totalRequests}
-        errorRate={errorRate}
-      />
-    </div>
+    </AuthGuard>
   );
 }

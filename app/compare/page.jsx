@@ -12,6 +12,7 @@ import {
   Clock,
   AlertCircle,
 } from 'lucide-react';
+import AuthGuard from '@/components/AuthGuard';
 
 function CompareContent() {
   const searchParams = useSearchParams();
@@ -311,8 +312,10 @@ function CompareContent() {
 
 export default function ComparePage() {
   return (
-    <Suspense fallback={<div className="py-20 text-center font-mono text-xs text-zinc-500">Loading comparison view...</div>}>
-      <CompareContent />
-    </Suspense>
+    <AuthGuard>
+      <Suspense fallback={<div className="py-20 text-center font-mono text-xs text-zinc-500">Loading comparison view...</div>}>
+        <CompareContent />
+      </Suspense>
+    </AuthGuard>
   );
 }

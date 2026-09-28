@@ -3,9 +3,28 @@
 import React from 'react';
 import QuickTestForm from '../components/QuickTestForm';
 import RecentRunsTable from '../components/RecentRunsTable';
-import { Zap, ShieldCheck, Gauge, TrendingUp, Sparkles } from 'lucide-react';
+import LandingPage from '../components/LandingPage';
+import { useAuth } from '../lib/auth-context';
+import { Zap, ShieldCheck, Gauge, TrendingUp, Sparkles, Loader2 } from 'lucide-react';
 
 export default function HomePage() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center gap-3 py-20">
+        <Loader2 className="w-8 h-8 text-yellow-400 animate-spin" />
+        <p className="font-mono text-xs text-zinc-500 uppercase tracking-wider">
+          Initializing Benchley environment...
+        </p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LandingPage />;
+  }
+
   return (
     <div className="space-y-10 py-2">
       {/* Hero Headline */}
@@ -18,7 +37,7 @@ export default function HomePage() {
           High-Velocity Load Testing <span className="text-yellow-400">Without Limits</span>
         </h1>
         <p className="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-          Simulate hundreds of concurrent virtual users, inspect real-time throughput & tail latencies, auto-detect breaking points, and benchmark endpoints.
+          Welcome back, <span className="text-white font-semibold">{user.name || user.email}</span>. Configure load distribution, trigger live k6 runs, and monitor metrics.
         </p>
       </div>
 
@@ -55,3 +74,4 @@ export default function HomePage() {
     </div>
   );
 }
+
