@@ -19,9 +19,12 @@ import {
 } from 'lucide-react';
 import { BenchleyLogo } from './Logo';
 import PerfTestingGuide from './PerfTestingGuide';
+import { useAuth } from '@/lib/auth-context';
 
 export default function LandingPage() {
   const workflowUrl = process.env.NEXT_PUBLIC_WORKFLOW_URL || 'https://workflow.ssh.net.in';
+  const { user, loading } = useAuth();
+  const isUnlocked = !loading && !!user;
 
   return (
     <div className="space-y-16 py-6 sm:py-10">
@@ -44,22 +47,46 @@ export default function LandingPage() {
 
         {/* Hero CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-          <a
-            href={`${workflowUrl}/login?redirect_to=https://benchley.ssh.net.in/test-runner`}
-            className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-sm text-white bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.15] hover:border-yellow-400/60 transition-all duration-150 group shadow-lg"
-          >
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Sign In with Workflow SSO</span>
-            <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-yellow-400 group-hover:translate-x-0.5 transition-all" />
-          </a>
+          {isUnlocked ? (
+            <>
+              <Link
+                href="/test-runner"
+                className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-sm text-black bg-yellow-400 hover:bg-yellow-300 shadow-glow transition-all duration-150 active:scale-[0.98]"
+              >
+                <Zap className="w-4 h-4 fill-current" />
+                <span>Open Test Runner</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/observability"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-white bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.15] hover:border-yellow-400/60 transition-all duration-150"
+              >
+                <span>View Live Target</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </>
+          ) : (
+            <>
+              <a
+                href={`${workflowUrl}/login?redirect_to=https://benchley.ssh.net.in/test-runner`}
+                className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-sm text-white bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.15] hover:border-yellow-400/60 transition-all duration-150 group shadow-lg"
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Sign In with Workflow SSO</span>
+                <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-yellow-400 group-hover:translate-x-0.5 transition-all" />
+              </a>
 
-          <Link
-            href="/signup"
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm bg-yellow-400 hover:bg-yellow-300 text-black shadow-glow transition-all duration-150 active:scale-[0.98]"
-          >
-            <span>Create Free Account</span>
-            <Zap className="w-4 h-4 fill-current" />
-          </Link>
+              <Link
+                href="/signup"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm bg-yellow-400 hover:bg-yellow-300 text-black shadow-glow transition-all duration-150 active:scale-[0.98]"
+              >
+                <span>Create Free Account</span>
+                <Zap className="w-4 h-4 fill-current" />
+              </Link>
+            </>
+          )}
         </div>
       </section>
 
@@ -113,16 +140,23 @@ export default function LandingPage() {
               Test Runner Interface
             </span>
           </div>
-          <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-500">
-            <Lock className="w-3.5 h-3.5 text-yellow-400" />
-            <span>Sign in to unlock live execution</span>
-          </div>
+          {isUnlocked ? (
+            <div className="flex items-center gap-1.5 text-xs font-mono text-yellow-400">
+              <Zap className="w-3.5 h-3.5 fill-current" />
+              <span>Test Runner unlocked</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-500">
+              <Lock className="w-3.5 h-3.5 text-yellow-400" />
+              <span>Sign in to unlock live execution</span>
+            </div>
+          )}
         </div>
 
         {/* Mock Preview Card with Glass Banner */}
         <div className="relative rounded-2xl border border-white/[0.08] bg-dark-900/60 p-6 sm:p-8 overflow-hidden">
           {/* Mocked Runner Form Skeleton / Preview */}
-          <div className="space-y-6 opacity-40 blur-[1px] pointer-events-none select-none">
+          <div className={`space-y-6 pointer-events-none select-none ${isUnlocked ? '' : 'opacity-40 blur-[1px]'}`}>
             <div className="flex items-center gap-3">
               <div className="w-24 h-10 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center font-mono font-bold text-xs text-yellow-400">
                 GET
@@ -148,32 +182,58 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Unlock Callout Overlay */}
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center p-6 text-center z-20">
-            <div className="p-3 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-yellow-400 mb-3">
-              <Lock className="w-6 h-6" />
+          {isUnlocked ? (
+            <div className="relative z-10 mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-xl border border-yellow-400/30 bg-yellow-400/[0.06] p-4">
+              <div>
+                <p className="text-sm font-bold text-white">Ready to execute high-throughput load tests?</p>
+                <p className="mt-0.5 text-[11px] font-mono text-zinc-400">
+                  Your session is active. Open the Test Runner, or watch incoming requests in the Live Target page.
+                </p>
+              </div>
+              <div className="flex shrink-0 gap-2">
+                <Link
+                  href="/test-runner"
+                  className="rounded-lg bg-yellow-400 px-4 py-2 font-mono text-xs font-bold text-black hover:bg-yellow-300"
+                >
+                  Open Test Runner
+                </Link>
+                <Link
+                  href="/observability"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-lg border border-white/[0.15] px-4 py-2 font-mono text-xs text-zinc-200 hover:bg-white/[0.06]"
+                >
+                  Live Target
+                </Link>
+              </div>
             </div>
-            <h4 className="text-lg font-bold text-white tracking-tight">
-              Ready to execute high-throughput load tests?
-            </h4>
-            <p className="text-xs text-zinc-400 mt-1 max-w-md font-mono">
-              Sign in with your Workflow or Benchley account to configure custom headers, stage profiles, and stream telemetry.
-            </p>
-            <div className="flex items-center gap-3 mt-5">
-              <Link
-                href="/login?redirect=/test-runner"
-                className="px-5 py-2.5 rounded-xl font-mono text-xs font-semibold text-white bg-white/[0.08] hover:bg-white/[0.15] border border-white/[0.15] transition-all"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/signup?redirect=/test-runner"
-                className="px-5 py-2.5 rounded-xl font-mono text-xs font-bold bg-yellow-400 hover:bg-yellow-300 text-black shadow-glow-sm transition-all"
-              >
-                Create Account →
-              </Link>
+          ) : (
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center p-6 text-center z-20">
+              <div className="p-3 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-yellow-400 mb-3">
+                <Lock className="w-6 h-6" />
+              </div>
+              <h4 className="text-lg font-bold text-white tracking-tight">
+                Ready to execute high-throughput load tests?
+              </h4>
+              <p className="text-xs text-zinc-400 mt-1 max-w-md font-mono">
+                Sign in with your Workflow or Benchley account to configure custom headers, stage profiles, and stream telemetry.
+              </p>
+              <div className="flex items-center gap-3 mt-5">
+                <Link
+                  href="/login?redirect=/test-runner"
+                  className="px-5 py-2.5 rounded-xl font-mono text-xs font-semibold text-white bg-white/[0.08] hover:bg-white/[0.15] border border-white/[0.15] transition-all"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup?redirect=/test-runner"
+                  className="px-5 py-2.5 rounded-xl font-mono text-xs font-bold bg-yellow-400 hover:bg-yellow-300 text-black shadow-glow-sm transition-all"
+                >
+                  Create Account →
+                </Link>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 

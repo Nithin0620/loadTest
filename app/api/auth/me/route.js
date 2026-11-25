@@ -40,7 +40,8 @@ export async function GET(req) {
     }
 
     const data = await workflowRes.json();
-    return NextResponse.json({ user: data.user || null }, { status: 200 });
+    const user = data.user || data?.data?.user || (data.email || data.id ? data : null);
+    return NextResponse.json({ user }, { status: user ? 200 : 401 });
   } catch (err) {
     console.error('Benchley /api/auth/me error:', err);
     return NextResponse.json({ user: null }, { status: 500 });

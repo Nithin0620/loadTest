@@ -51,7 +51,8 @@ export function AuthProvider({ children }) {
       throw new Error(data.error || 'Failed to log in');
     }
 
-    setUser(data.user);
+    await fetchCurrentUser();
+    setUser((current) => current || data.user || (data.email ? data : null));
     return data;
   };
 
@@ -67,7 +68,8 @@ export function AuthProvider({ children }) {
       throw new Error(data.error || 'Failed to sign up');
     }
 
-    setUser(data.user);
+    await fetchCurrentUser();
+    setUser((current) => current || data.user || (data.email ? data : null));
     return data;
   };
 

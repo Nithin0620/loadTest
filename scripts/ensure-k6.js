@@ -1,75 +1,124 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { execSync } from 'child_process';
 import https from 'https';
-import { promisify } from 'util';
-import stream from 'stream';
-import zlib from 'zlib';
+import { fileURLToPath } from 'url';
 
-const pipeline = promisify(stream.pipeline);
+const PROJECT_BIN_DIR = path.resolve(process.cwd(), 'bin');
+const PROJECT_K6_PATH = path.join(PROJECT_BIN_DIR, 'k6');
+const TEMP_BIN_DIR = path.join(os.tmpdir(), 'loadcheck-k6');
+const TEMP_K6_PATH = path.join(TEMP_BIN_DIR, 'k6');
+const BINARY_CACHE_KEY = Symbol.for('loadcheck.k6BinaryPath');
 
-const BIN_DIR = path.resolve(process.cwd(), 'bin');
-const K6_BIN_PATH = path.join(BIN_DIR, 'k6');
+const K6_ASSETS = {
+  'linux-x64': 'linux-amd64',
+  'linux-arm64': 'linux-arm64',
+  'darwin-x64': 'macos-amd64',
+  'darwin-arm64': 'macos-arm64',
+};
+
+function isExecutable(filePath) {
+  try {
+    fs.accessSync(filePath, fs.constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function makeExecutable(filePath) {
+  if (!isExecutable(filePath)) {
+    fs.chmodSync(filePath, 0o755);
+  }
+  return filePath;
+}
+
+function cacheBinary(binaryPath) {
+  globalThis[BINARY_CACHE_KEY] = binaryPath;
+  return binaryPath;
+}
+
+function copyToTemp(sourcePath) {
+  fs.mkdirSync(TEMP_BIN_DIR, { recursive: true });
+  fs.copyFileSync(sourcePath, TEMP_K6_PATH);
+  return makeExecutable(TEMP_K6_PATH);
+}
 
 export async function ensureK6Binary() {
-  // 1. Check if k6 is installed globally
+  if (globalThis[BINARY_CACHE_KEY]) {
+    return globalThis[BINARY_CACHE_KEY];
+  }
+
+  // Explicit override is useful on serverless platforms that ship k6 via a layer.
+  const configuredPath = process.env.K6_BINARY_PATH;
+  if (configuredPath) {
+    if (!fs.existsSync(configuredPath)) {
+      throw new Error(`K6_BINARY_PATH does not exist: ${configuredPath}`);
+    }
+    return cacheBinary(makeExecutable(configuredPath));
+  }
+
+  // 1. k6 installed globally on PATH
   try {
     const globalK6 = execSync('which k6', { encoding: 'utf-8' }).trim();
     if (globalK6) {
       console.log(`[LoadCheck k6] Found system k6 at: ${globalK6}`);
-      return globalK6;
+      return cacheBinary(globalK6);
     }
   } catch {
     // Not installed globally
   }
 
-  // 2. Check if local bin/k6 exists and is executable
-  if (fs.existsSync(K6_BIN_PATH)) {
+  // 2. Bundled project binary (read-only in most serverless runtimes)
+  if (fs.existsSync(PROJECT_K6_PATH)) {
     try {
-      fs.accessSync(K6_BIN_PATH, fs.constants.X_OK);
-      return K6_BIN_PATH;
+      return cacheBinary(makeExecutable(PROJECT_K6_PATH));
     } catch {
-      fs.chmodSync(K6_BIN_PATH, 0o755);
-      return K6_BIN_PATH;
+      try {
+        return cacheBinary(copyToTemp(PROJECT_K6_PATH));
+      } catch {
+        // Fall through to download
+      }
     }
   }
 
-  // 3. Download standalone k6 binary for Linux x86_64
-  console.log('[LoadCheck k6] k6 binary not found. Auto-downloading official k6 release...');
-  if (!fs.existsSync(BIN_DIR)) {
-    fs.mkdirSync(BIN_DIR, { recursive: true });
+  // 3. Previously downloaded binary in the writable temp directory
+  if (fs.existsSync(TEMP_K6_PATH)) {
+    return cacheBinary(makeExecutable(TEMP_K6_PATH));
+  }
+
+  // 4. Download into OS temp dir — never write into the app directory in production
+  const asset = K6_ASSETS[`${process.platform}-${process.arch}`];
+  if (!asset) {
+    throw new Error(`No prebuilt k6 download is configured for ${process.platform}-${process.arch}. Set K6_BINARY_PATH instead.`);
   }
 
   const K6_VERSION = 'v0.56.0';
-  const downloadUrl = `https://github.com/grafana/k6/releases/download/${K6_VERSION}/k6-${K6_VERSION}-linux-amd64.tar.gz`;
-  const tarGzPath = path.join(BIN_DIR, 'k6.tar.gz');
+  const downloadUrl = `https://github.com/grafana/k6/releases/download/${K6_VERSION}/k6-${K6_VERSION}-${asset}.tar.gz`;
+  fs.mkdirSync(TEMP_BIN_DIR, { recursive: true });
+  const tarGzPath = path.join(TEMP_BIN_DIR, `k6-${asset}.tar.gz`);
 
-  console.log(`[LoadCheck k6] Downloading ${downloadUrl}...`);
-  await downloadFile(downloadUrl, tarGzPath);
-
-  console.log('[LoadCheck k6] Extracting binary...');
+  console.log(`[LoadCheck k6] k6 not found. Downloading ${downloadUrl}...`);
   try {
-    execSync(`tar -xzf "${tarGzPath}" -C "${BIN_DIR}" --strip-components=1`, { stdio: 'inherit' });
+    await downloadFile(downloadUrl, tarGzPath);
+    execSync(`tar -xzf "${tarGzPath}" -C "${TEMP_BIN_DIR}" --strip-components=1`, { stdio: 'inherit' });
+    if (!fs.existsSync(TEMP_K6_PATH)) {
+      throw new Error('k6 binary was not found after extraction');
+    }
+    makeExecutable(TEMP_K6_PATH);
+    console.log(`[LoadCheck k6] Installed k6 to ${TEMP_K6_PATH}`);
+    return cacheBinary(TEMP_K6_PATH);
+  } finally {
     if (fs.existsSync(tarGzPath)) {
-      fs.unlinkSync(tarGzPath);
+      try { fs.unlinkSync(tarGzPath); } catch {}
     }
-    if (fs.existsSync(K6_BIN_PATH)) {
-      fs.chmodSync(K6_BIN_PATH, 0o755);
-      console.log(`[LoadCheck k6] Successfully installed k6 binary to ${K6_BIN_PATH}`);
-      return K6_BIN_PATH;
-    }
-  } catch (err) {
-    console.error('[LoadCheck k6] Extraction failed:', err.message);
-    throw err;
   }
-
-  return K6_BIN_PATH;
 }
 
 function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
     https.get(url, (res) => {
-      // Handle HTTP redirects (GitHub Releases redirect to AWS S3)
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
         return downloadFile(res.headers.location, dest).then(resolve).catch(reject);
       }
@@ -91,7 +140,11 @@ function downloadFile(url, dest) {
   });
 }
 
-// Run standalone if invoked directly
-if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(K6_BIN_PATH.replace(/\/k6$/, '/ensure-k6.js') || '')) {
-  ensureK6Binary().catch(console.error);
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  ensureK6Binary()
+    .then((binaryPath) => console.log(`[LoadCheck k6] Ready: ${binaryPath}`))
+    .catch((err) => {
+      console.error(`[LoadCheck k6] Failed to provision k6: ${err.message}`);
+      process.exitCode = 1;
+    });
 }
