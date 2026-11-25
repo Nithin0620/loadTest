@@ -1,15 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Zap, Sliders, Terminal, Plus, Trash2, ArrowRight,
-  TrendingUp, Activity, Flame, Clock
+  TrendingUp, Activity, Flame, Clock, ExternalLink
 } from 'lucide-react';
 import AdvancedConfigTabs from './AdvancedConfigTabs';
 import CurlImportModal from './CurlImportModal';
 
 const HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
+const DEMO_TARGET_PATH = '/api/mock-target?delay=20';
+const LOCAL_DEMO_TARGET = `http://localhost:3000${DEMO_TARGET_PATH}`;
 
 // ─── Test type metadata ────────────────────────────────────────────────────────
 const TEST_TYPES = [
@@ -66,8 +68,15 @@ export default function QuickTestForm() {
   const [testType, setTestType] = useState('load');
 
   // ── Shared ─────────────────────────────────────────────────────────────────
-  const [targetUrl, setTargetUrl] = useState('https://httpbin.org/get');
+  const [demoTargetUrl, setDemoTargetUrl] = useState(LOCAL_DEMO_TARGET);
+  const [targetUrl, setTargetUrl] = useState(LOCAL_DEMO_TARGET);
   const [httpMethod, setHttpMethod] = useState('GET');
+
+  useEffect(() => {
+    const url = `${window.location.origin}${DEMO_TARGET_PATH}`;
+    setDemoTargetUrl(url);
+    setTargetUrl((current) => (current === LOCAL_DEMO_TARGET ? url : current));
+  }, []);
 
   // ── Load test params ───────────────────────────────────────────────────────
   const [loadMode, setLoadMode] = useState('constant_vus'); // constant_vus | ramping_vus | constant_rps
@@ -299,6 +308,34 @@ export default function QuickTestForm() {
               onChange={(e) => setTargetUrl(e.target.value)}
               className="flex-1 bg-black border border-dark-700 rounded-lg px-4 py-2.5 text-sm font-mono text-white placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400/30 transition-all"
             />
+          </div>
+          <div className="flex flex-col gap-3 rounded-xl border border-yellow-400/25 bg-yellow-400/[0.03] px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <p className="text-[11px] text-zinc-300">
+                Testing this app? The demo target API is pre-filled above. You can watch every request arrive live in the Observability page.
+              </p>
+              <code className="mt-1 block truncate text-[10px] font-mono text-yellow-400">
+                {demoTargetUrl}
+              </code>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <button
+                type="button"
+                onClick={() => setTargetUrl(demoTargetUrl)}
+                className="rounded-lg border border-white/[0.12] px-2.5 py-1.5 text-[11px] font-mono text-zinc-300 hover:bg-white/[0.06]"
+              >
+                Use demo target
+              </button>
+              <a
+                href="/observability"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 rounded-lg border border-yellow-400/30 bg-yellow-400/10 px-2.5 py-1.5 text-[11px] font-mono text-yellow-400 hover:bg-yellow-400/20"
+              >
+                Open Observability
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
           </div>
         </div>
 

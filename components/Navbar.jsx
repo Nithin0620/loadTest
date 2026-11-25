@@ -14,6 +14,7 @@ import {
   ChevronDown,
   LayoutGrid,
   Info,
+  Activity,
 } from 'lucide-react';
 import { BenchleyLogo } from './Logo';
 import { useAuth } from '@/lib/auth-context';
@@ -46,6 +47,7 @@ export default function Navbar() {
 
   const navLinks = [
     { label: 'Test Runner', href: '/test-runner', icon: Zap },
+    { label: 'Live Target', href: '/observability', icon: Activity },
     { label: 'Compare Runs', href: '/compare', icon: GitCompare },
     { label: 'About Benchley', href: '/benchley', icon: Info },
   ];

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'http';
 import { GET as getMockTarget, POST as postMockTarget } from '../app/api/mock-target/route.js';
+import { GET as getTargetStats, DELETE as resetTargetStats } from '../app/api/mock-target/stats/route.js';
 import { GET as getRuns, POST as postRun } from '../app/api/runs/route.js';
 import { GET as getCompare } from '../app/api/runs/compare/route.js';
 import { connectToDatabase, disconnectDatabase } from '../lib/db/mongoose.js';
@@ -55,6 +56,24 @@ test('API Route Handlers Test Suite', async (t) => {
     assert.equal(res.status, 200);
     const data = await res.json();
     assert.equal(data.echoBody.ping, 'pong');
+  });
+
+  await t.test('mock-target stats should count requests and support reset', async () => {
+    await resetTargetStats();
+    const req = new Request('http://localhost:3000/api/mock-target?status=201');
+    const res = await getMockTarget(req);
+    assert.equal(res.status, 201);
+
+    const statsRes = await getTargetStats(new Request('http://localhost:3000/api/mock-target/stats'));
+    const stats = await statsRes.json();
+    assert.equal(stats.totals.requests, 1);
+    assert.equal(stats.byStatus['201'], 1);
+    assert.equal(stats.recent.length, 1);
+    assert.ok(stats.timeline.length > 0);
+
+    const resetRes = await resetTargetStats();
+    const resetData = await resetRes.json();
+    assert.equal(resetData.totals.requests, 0);
   });
 
   await t.test('POST /api/runs should validate and create a test run and complete execution', async () => {
