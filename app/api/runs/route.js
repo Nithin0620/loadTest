@@ -2,6 +2,7 @@ import { connectToDatabase } from '../../../lib/db/mongoose.js';
 import TestRun from '../../../models/TestRun.js';
 import TestConfig from '../../../models/TestConfig.js';
 import { runK6Test } from '../../../lib/k6/runner.js';
+import { k6EventBus } from '../../../lib/k6/eventBus.js';
 
 export const dynamic = 'force-dynamic';
 
@@ -73,6 +74,7 @@ export async function POST(request) {
     // Start k6 runner in background
     runK6Test(runDoc._id, snapshotConfig).catch((err) => {
       console.error('[API /api/runs] Background run error:', err);
+      k6EventBus.emitError(String(runDoc._id), { message: err.message });
     });
 
     return Response.json({

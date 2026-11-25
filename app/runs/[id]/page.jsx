@@ -59,7 +59,9 @@ export default function LiveTestPage() {
         const data = await res.json();
         if (data.success && data.run) {
           setConfig(data.run.snapshotConfig);
-          if (data.run.status === 'completed' || data.run.status === 'failed' || data.run.status === 'cancelled') {
+          if (data.run.status === 'running') {
+            setStatus('running');
+          } else if (data.run.status === 'completed' || data.run.status === 'failed' || data.run.status === 'cancelled') {
             setStatus(data.run.status);
             if (data.run.errorMessage) {
               setErrorMsg(data.run.errorMessage);
@@ -117,8 +119,8 @@ export default function LiveTestPage() {
       try {
         const doneData = JSON.parse(e.data);
         setStatus(doneData.status || 'completed');
-        if (doneData.status === 'failed' && doneData.errorMessage) {
-          setErrorMsg(doneData.errorMessage);
+        if (doneData.status === 'failed') {
+          setErrorMsg(doneData.errorMessage || doneData.message || 'Test run failed');
         }
         es.close();
 
@@ -132,20 +134,49 @@ export default function LiveTestPage() {
     });
 
     es.addEventListener('error', (e) => {
+      if (!e.data) return;
       try {
-        if (e.data) {
-          const errData = JSON.parse(e.data);
-          setErrorMsg(errData.message || 'Stream connection error');
-          setStatus('failed');
-        }
+        const errData = JSON.parse(e.data);
+        setErrorMsg(errData.message || 'Stream connection error');
+        setStatus('failed');
+        es.close();
       } catch {}
-      es.close();
     });
 
     return () => {
       if (es) es.close();
     };
   }, [runId, router]);
+
+  // Poll while connecting so a run that failed before the stream attached is detected
+  useEffect(() => {
+    if (status !== 'connecting') return undefined;
+
+    let attempts = 0;
+    const interval = setInterval(async () => {
+      attempts += 1;
+      try {
+        const res = await fetch(`/api/runs/${runId}`, { cache: 'no-store' });
+        const data = await res.json();
+        const run = data.run;
+        if (!run) return;
+
+        if (run.status === 'running') {
+          setStatus('running');
+        } else if (['completed', 'failed', 'cancelled'].includes(run.status)) {
+          setStatus(run.status);
+          if (run.errorMessage) setErrorMsg(run.errorMessage);
+        } else if (attempts >= 15) {
+          setStatus('failed');
+          setErrorMsg('Engine did not start within 30 seconds. Check k6 availability or deployment logs.');
+        }
+      } catch {
+        // Retry on the next interval
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [runId, status]);
 
   // Handle Cancel
   const handleCancel = async () => {

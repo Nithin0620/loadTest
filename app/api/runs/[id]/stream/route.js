@@ -8,12 +8,18 @@ export const dynamic = 'force-dynamic';
 export async function GET(request, { params }) {
   const { id } = params;
   const encoder = new TextEncoder();
+  let cleanupStream = () => {};
 
   await connectToDatabase();
   const runDoc = await TestRun.findById(id).lean();
 
   const stream = new ReadableStream({
     async start(controller) {
+      let finished = false;
+      let heartbeat;
+      let statusPoll;
+      let lateStartCheck;
+
       function sendEvent(eventName, data) {
         try {
           const payload = `event: ${eventName}\ndata: ${JSON.stringify(data)}\n\n`;
@@ -23,7 +29,60 @@ export async function GET(request, { params }) {
         }
       }
 
-      // Initial status handshake
+      function cleanup() {
+        if (heartbeat) clearInterval(heartbeat);
+        if (statusPoll) clearInterval(statusPoll);
+        if (lateStartCheck) clearTimeout(lateStartCheck);
+        k6EventBus.offTick(String(id), onTick);
+        k6EventBus.offDone(String(id), onDone);
+        k6EventBus.offError(String(id), onError);
+      }
+
+      function finish(eventName, data) {
+        if (finished) return;
+        finished = true;
+        cleanup();
+        sendEvent(eventName, data);
+        try { controller.close(); } catch {}
+      }
+
+      async function checkDatabaseStatus() {
+        if (finished) return;
+        try {
+          const latest = await TestRun.findById(id).lean();
+          if (!latest || finished) return;
+
+          if (latest.status === 'failed') {
+            finish('error', {
+              status: 'failed',
+              message: latest.errorMessage || 'Test run failed before the engine could start',
+            });
+          } else if (latest.status === 'completed' || latest.status === 'cancelled') {
+            finish('done', {
+              status: latest.status,
+              metricsSummary: latest.metricsSummary,
+              timeSeriesMetrics: latest.timeSeriesMetrics,
+            });
+          }
+        } catch {
+          // Poll again on the next tick
+        }
+      }
+
+      const onTick = (tickData) => {
+        if (!finished) sendEvent('tick', tickData);
+      };
+
+      const onDone = (doneData) => {
+        finish('done', doneData);
+      };
+
+      const onError = (errorData) => {
+        finish('error', errorData);
+      };
+
+      cleanupStream = cleanup;
+
       sendEvent('init', {
         runId: id,
         status: runDoc ? runDoc.status : 'not_found',
@@ -32,69 +91,38 @@ export async function GET(request, { params }) {
 
       // If already completed or failed, emit done and close
       if (runDoc && (runDoc.status === 'completed' || runDoc.status === 'failed' || runDoc.status === 'cancelled')) {
-        sendEvent('done', {
+        finish('done', {
           status: runDoc.status,
+          errorMessage: runDoc.errorMessage,
           metricsSummary: runDoc.metricsSummary,
           timeSeriesMetrics: runDoc.timeSeriesMetrics,
         });
-        controller.close();
         return;
       }
-
-      const onTick = (tickData) => {
-        sendEvent('tick', tickData);
-      };
-
-      const onDone = (doneData) => {
-        sendEvent('done', doneData);
-        cleanup();
-        try { controller.close(); } catch {}
-      };
-
-      const onError = (errorData) => {
-        sendEvent('error', errorData);
-        cleanup();
-        try { controller.close(); } catch {}
-      };
-
-      const cleanup = () => {
-        k6EventBus.offTick(String(id), onTick);
-        k6EventBus.offDone(String(id), onDone);
-        k6EventBus.offError(String(id), onError);
-      };
 
       k6EventBus.onTick(String(id), onTick);
       k6EventBus.onDone(String(id), onDone);
       k6EventBus.onError(String(id), onError);
 
       // Heartbeat every 15s to keep connection alive
-      const heartbeat = setInterval(() => {
+      heartbeat = setInterval(() => {
         try {
           controller.enqueue(encoder.encode(': heartbeat\n\n'));
         } catch {
-          clearInterval(heartbeat);
           cleanup();
         }
       }, 15000);
 
+      // Poll the database so failures that happen before k6 starts are not missed
+      statusPoll = setInterval(checkDatabaseStatus, 2000);
+
       // Check if test completed while we were connecting
       if (!isTestRunning(id)) {
-        setTimeout(async () => {
-          const latest = await TestRun.findById(id).lean();
-          if (latest && latest.status !== 'pending' && latest.status !== 'running') {
-            clearInterval(heartbeat);
-            sendEvent('done', {
-              status: latest.status,
-              metricsSummary: latest.metricsSummary,
-            });
-            cleanup();
-            try { controller.close(); } catch {}
-          }
-        }, 1000);
+        lateStartCheck = setTimeout(checkDatabaseStatus, 1000);
       }
     },
     cancel() {
-      // Client disconnected
+      cleanupStream();
     }
   });
 
